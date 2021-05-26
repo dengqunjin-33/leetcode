@@ -331,6 +331,93 @@ public class LeetCodeJianZhiOffer {
         return target;
     }
 
+    //剑指 Offer 44. 数字序列中某一位的数字
+    //数字以0123456789101112131415…的格式序列化到一个字符序列中。在这个序列中，第5位（从下标0开始计数）是5，第13位是1，第19位是4，等等。
+    //请写一个函数，求任意第n位对应的数字。
+    public static int findNthDigit(int n) {
+        // 0   1
+        // 1   9 * 1 * 10^0
+        // 2   9 * 2 * 10^1
+        // 3   9 * 3 * 10^2
+        if (n < 10){
+            return n;
+        }
+        int digit = 1;//表示位数
+        long start = 1;//表示10的digit - 1 次幂
+        long count = 9;
+        while (n > count) {
+            n -= count;
+            digit += 1;
+            start *= 10;
+            count = digit * start * 9;
+        }
+        long num = start + (n - 1) / digit;//求出n在哪个整数里面
+        return Long.toString(num).charAt((n - 1) % digit) - '0';
+    }
+
+    //剑指 Offer 46. 把数字翻译成字符串
+    //给定一个数字，我们按照如下规则把它翻译为字符串：0 翻译成 “a” ，1 翻译成 “b”，……，11 翻译成 “l”，
+    //……，25 翻译成 “z”。一个数字可能有多个翻译。请编程实现一个函数，用来计算一个数字有多少种不同的翻译方法。
+    public int translateNum(int num) {
+        String s = String.valueOf(num);
+        int a = 1, b = 1;
+        for(int i = 2; i <= s.length(); i++) {
+            String tmp = s.substring(i - 2, i);
+            int c = tmp.compareTo("10") >= 0 && tmp.compareTo("25") <= 0 ? a + b : a;
+            b = a;
+            a = c;
+        }
+        return a;
+    }
+
+    //剑指 Offer 47. 礼物的最大价值
+    //在一个 m*n 的棋盘的每一格都放有一个礼物，每个礼物都有一定的价值（价值大于 0）。
+    //你可以从棋盘的左上角开始拿格子里的礼物，并每次向右或者向下移动一格、直到到达棋盘的右下角。
+    //给定一个棋盘及其上面的礼物的价值，请计算你最多能拿到多少价值的礼物？
+    public int maxValue(int[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int[][] maxArr = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                int prei = i - 1;
+                int prej = j - 1;
+                int top = grid[i][j];
+                int left = grid[i][j];
+                if (prei >= 0){
+                    left += maxArr[prei][j];
+                }
+                if (prej >= 0){
+                    top += maxArr[i][prej];
+                }
+                maxArr[i][j] =Math.max(top,left);
+            }
+        }
+        return maxArr[row - 1][col - 1];
+    }
+
+    //剑指 Offer 48. 最长不含重复字符的子字符串
+    //请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+    public static int lengthOfLongestSubstring(String s) {
+        int max = 0;
+        char[] chars = s.toCharArray();
+        boolean[] flag = new boolean[256];//这里很慢
+        for (int i = 0; i < chars.length; i++) {
+            int tempMax = 1;
+            flag[chars[i]] = true;
+            for (int j = i + 1; j < chars.length; j++) {
+                if (flag[chars[j]]){
+                    break;
+                }
+                flag[chars[j]] = true;
+                ++ tempMax;
+            }
+            max = Math.max(max,tempMax);
+            flag = new boolean[256];
+        }
+        return max;
+    }
+
     //剑指 Offer 50. 第一个只出现一次的字符
     public char firstUniqChar(String s) {
         if(s.length() == 0){
@@ -408,6 +495,67 @@ public class LeetCodeJianZhiOffer {
         }
         //tempA要么是空，要么是两链表的交点
         return tempA;
+    }
+
+    //剑指 Offer 53 - I. 在排序数组中查找数字 I
+    //统计一个数字在排序数组中出现的次数。
+    public static int search(int[] nums, int target) {
+       int left = 0;
+       int right = nums.length - 1;
+       int index = -1;
+       //双指针
+       while (left <= right){
+           int mid  = (left + right) >> 1;
+           if (nums[mid] == target){
+               index = mid;
+               break;
+           }else if (nums[mid] > target){
+               right = mid - 1;
+           }else {
+               left = mid + 1;
+           }
+       }
+       //判断是否寻找到
+       if (index == -1){
+           return 0;
+       }
+
+       int count = 1;
+
+       //向左延伸
+       for (int i = index - 1; i >= 0; i--) {
+           if (nums[i] != nums[index]){
+               break;
+           }
+           ++count;
+       }
+       //向右延伸
+       for (int i = index + 1; i < nums.length; i++) {
+           if (nums[i] != nums[index]){
+               break;
+           }
+           ++count;
+       }
+       return count;
+    }
+
+    //剑指 Offer 53 - II. 0～n-1中缺失的数字
+    //一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。
+    //在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字。
+    public int missingNumber(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            if (i != nums[i]){
+                return i - 1;
+            }
+        }
+        return nums.length;
+    }
+
+    class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode(int x) { val = x; }
     }
 
    //剑指 Offer 56 - II. 数组中数字出现的次数 II
