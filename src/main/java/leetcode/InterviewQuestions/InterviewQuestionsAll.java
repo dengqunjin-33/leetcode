@@ -389,6 +389,32 @@ public class InterviewQuestionsAll {
         return root;
     }
 
+    //面试题 04.05. 合法二叉搜索树
+    //实现一个函数，检查一棵二叉树是否为二叉搜索树。
+    public static boolean isValidBST(TreeNode root) {
+        return isValidBST(root,new ArrayList<>());
+    }
+
+    public static boolean isValidBST(TreeNode root, List<Integer> list) {
+        if (null == root){
+            return true;
+        }
+        boolean left = isValidBST(root.left, list);
+        if (left){
+            if (list.isEmpty()){
+                list.add(root.val);
+            }else {
+                if (root.val > list.get(list.size() - 1)){
+                    list.add(root.val);
+                }else {
+                    return false;
+                }
+            }
+            return isValidBST(root.right, list);
+        }
+        return false;
+    }
+
     //面试题 05.01. 插入
     //给定两个整型数字 N 与 M，以及表示比特位置的 i 与 j（i <= j，且从 0 位开始计算）。
     //编写一种方法，使 M 对应的二进制数字插入 N 对应的二进制数字的第 i ~ j 位区域，不足之处用 0 补齐。具体插入过程如图所示。
@@ -696,9 +722,6 @@ public class InterviewQuestionsAll {
         return res;
     }
 
-    public static void main(String[] args) {
-        divingBoard(2,1118596,979);
-    }
 
 
     //面试题 17.04. 消失的数字
