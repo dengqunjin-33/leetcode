@@ -18,14 +18,15 @@ public class LeetCode160To169 {
         int max = 0;
         for (int i = 0; i < temp.length - 1; i++) {
             int tempMax = temp[i + 1] - temp[i];
-            max = max < tempMax ? tempMax : max;
+            max = Math.max(max, tempMax);
         }
         return max;
     }
 
     //快速排序
-    private void quick(int[] arr, int start, int end) {
+    private static void quick(int[] arr, int start, int end) {
         if (start < end) {
+            //基准位置
             int stand = arr[start];
             int low = start;
             int high = end;
@@ -171,11 +172,6 @@ public class LeetCode160To169 {
         }
         Arrays.sort(nums);
         return nums[nums.length >> 1];
-    }
-
-    public static void main(String[] args) {
-        int[] i = {3, 2, 3};
-        majorityElement(i);
     }
 
 }

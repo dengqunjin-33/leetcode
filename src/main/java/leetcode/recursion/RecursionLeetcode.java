@@ -47,10 +47,6 @@ public class RecursionLeetcode {
         }
     }
 
-    public static void main(String[] args) {
-        threeSum(new int[]{1,-1,-1,0});
-    }
-
     //17. 电话号码的字母组合
     //给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。
     //给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
@@ -387,5 +383,155 @@ public class RecursionLeetcode {
         }
     }
 
+    //797. 所有可能的路径
+    //给一个有 n 个结点的有向无环图，找到所有从 0 到 n-1 的路径并输出（不要求按顺序）
+    //二维数组的第 i 个数组中的单元都表示有向图中 i 号结点所能到达的下一些结点（译者注：有向图是有方向的，即规定了 a→b 你就不能从 b→a ）空就是没有下一个结点了。
+    public static List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        List<List<Integer>> res = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(0);
+        allPathsSourceTarget(graph,res,list,0,graph.length - 1);
+        return res;
+    }
 
+    public static void allPathsSourceTarget(int[][] graph, List<List<Integer>> res, List<Integer> temp, int index, int target) {
+        if (index == target){
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        int len = graph[index].length;
+        if (len == 0){
+            return;
+        }
+        for (int i = 0; i < len; i++) {
+            temp.add(graph[index][i]);
+            allPathsSourceTarget(graph,res,temp,graph[index][i],target);
+            temp.remove(temp.size() - 1);
+        }
+    }
+
+    //967. 连续差相同的数字
+    //返回所有长度为 n 且满足其每两个连续位上的数字之间的差的绝对值为 k 的 非负整数 。
+    //请注意，除了 数字 0 本身之外，答案中的每个数字都 不能 有前导零。例如，01 有一个前导零，所以是无效的；但 0 是有效的。
+    //你可以按 任何顺序 返回答案。
+    public int[] numsSameConsecDiff(int n, int k) {
+        Set<Integer> resList = new HashSet<>();
+        for (int i = 1; i < 10; i++) {
+            numsSameConsecDiff(resList,i,i,n,k,1);
+        }
+        int[] res = new int[resList.size()];
+        Iterator<Integer> iterator = resList.iterator();
+        int index = 0;
+        while (iterator.hasNext()){
+            res[index] = iterator.next();
+            ++index;
+        }
+        return res;
+    }
+
+    public void numsSameConsecDiff(Set<Integer> res,int x,int cur,int n, int k,int index) {
+        if (index == n){
+            res.add(x);
+            return;
+        }
+        x *= 10;
+
+        if (cur - k >= 0){
+            x += cur - k;
+            numsSameConsecDiff(res,x,cur - k,n,k,index+1);
+            x -= cur - k;
+        }
+        if (cur + k <=9){
+            x += cur + k;
+            numsSameConsecDiff(res,x,cur + k,n,k,index+1);
+        }
+    }
+
+    //1079. 活字印刷
+    //你有一套活字字模 tiles，其中每个字模上都刻有一个字母 tiles[i]。返回你可以印出的非空字母序列的数目。
+    //注意：本题中，每个活字字模只能使用一次。
+    public int numTilePossibilities(String tiles) {
+        if (tiles.isEmpty()){
+            return 0;
+        }
+        char[] chars = tiles.toCharArray();
+        boolean[] flag = new boolean[chars.length];
+        Set<String> res = new HashSet<>();
+        numTilePossibilities(res,chars,flag,new StringBuffer(),0);
+        return res.size();
+    }
+
+    public void numTilePossibilities(Set<String> res,char[] chars,boolean[] flag,StringBuffer sb,int len) {
+        if (chars.length == len){
+            return;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (flag[i]){
+                continue;
+            }
+            sb.append(chars[i]);
+            flag[i] = true;
+            res.add(sb.toString());
+            numTilePossibilities(res,chars,flag,sb,len + 1);
+            flag[i] = false;
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+
+    //1291. 顺次数
+    //我们定义「顺次数」为：每一位上的数字都比前一位上的数字大 1 的整数。
+    //请你返回由 [low, high] 范围内所有顺次数组成的 有序 列表（从小到大排序）。
+    public List<Integer> sequentialDigits(int low, int high) {
+        List<Integer> res = new ArrayList<>();
+        for (int i = 1; i < 10; i++) {
+            sequentialDigits(res,i,i + 1,low,high);
+        }
+        return res;
+    }
+
+    public void sequentialDigits(List<Integer> res,int cur,int temp,int low, int high) {
+        if (cur >= low && cur <= high){
+            res.add(cur);
+        }
+        if (temp > 9){
+            return ;
+        }
+        cur *= 10;
+        cur += temp;
+        sequentialDigits(res,cur,temp + 1,low ,high);
+    }
+
+    //自己写的
+    //1641. 统计字典序元音字符串的数目
+    //给你一个整数 n，请返回长度为 n 、仅由元音 (a, e, i, o, u) 组成且按 字典序排列 的字符串数量。
+    //字符串 s 按 字典序排列 需要满足：对于所有有效的 i，s[i] 在字母表中的位置总是与 s[i+1] 相同或在 s[i+1] 之前。WW
+    public static int countVowelStrings(int n) {
+        return countVowelStrings(0,0,n);
+    }
+
+    public static int countVowelStrings(int index, int cLen, int len) {
+        if (cLen == len){
+            return 1;
+        }
+        int res = 0;
+        for (int i = index; i < 5; i++) {
+            res += countVowelStrings(i,cLen + 1,len);
+        }
+        return res;
+    }
+
+    //大神写的
+    //1641. 统计字典序元音字符串的数目
+    //给你一个整数 n，请返回长度为 n 、仅由元音 (a, e, i, o, u) 组成且按 字典序排列 的字符串数量。
+    //字符串 s 按 字典序排列 需要满足：对于所有有效的 i，s[i] 在字母表中的位置总是与 s[i+1] 相同或在 s[i+1] 之前。
+    public static int countVowelStrings2(int n) {
+        int a = 1, b = 1, c = 1, d = 1, e = 1;
+        for (int i = 0; i < n - 1; i++) {
+            b += a;
+            c += b;
+            d += c;
+            e += d;
+        }
+        return a + b + c + d + e;
+    }
 }
