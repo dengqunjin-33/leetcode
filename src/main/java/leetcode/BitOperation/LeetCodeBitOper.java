@@ -26,6 +26,39 @@ public class LeetCodeBitOper {
         return new ArrayList<>(list);
     }
 
+    //递归
+    //342. 4的幂
+    //给定一个整数，写一个函数来判断它是否是 4 的幂次方。如果是，返回 true ；否则，返回 false 。
+    //整数 n 是 4 的幂次方需满足：存在整数 x 使得 n == 4x
+    public boolean isPowerOfFour(int n) {
+        if(n <= 0){
+            return false;
+        }
+        if(n == 1){
+            return true;
+        }
+        return n % 4 == 0 && isPowerOfFour(n / 4);
+    }
+
+    //位运算
+    //342. 4的幂
+    //给定一个整数，写一个函数来判断它是否是 4 的幂次方。如果是，返回 true ；否则，返回 false 。
+    //整数 n 是 4 的幂次方需满足：存在整数 x 使得 n == 4x
+    public boolean isPowerOfFour2(int n) {
+        if(n <= 0){
+            return false;
+        }
+        if ((n & n - 1) != 0){
+            return false;
+        }
+        boolean flag = false;
+        while (n != 0){
+            n = n >> 1;
+            flag = !flag;
+        }
+        return flag;
+    }
+
     //461. 汉明距离
     //两个整数之间的汉明距离指的是这两个数字对应二进制位不同的位置的数目。
     //给出两个整数 x 和 y，计算它们之间的汉明距离。
