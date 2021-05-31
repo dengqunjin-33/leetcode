@@ -2,6 +2,7 @@ package leetcode.Tree;
 
 
 import leetcode.BinarySearch.BinarySearchSimple;
+import sun.reflect.generics.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -326,6 +327,79 @@ public class LeetCodeTree {
         int left = countNodes(root.left);
         int right = countNodes(root.right);
         return 1 + left + right;
+    }
+
+    //513. 找树左下角的值
+    //给定一个二叉树，在树的最后一行找到最左边的值。
+    public int findBottomLeftValue(TreeNode root) {
+        int res = -1;
+        if (null == root){
+            return res;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            int side = queue.size();
+            for (int i = 0; i < side; i++) {
+                TreeNode node = queue.poll();
+                if (i == 0){
+                    res = node.val;
+                }
+                if (null != node.left){
+                    queue.offer(node.left);
+                }
+                if (null != node.right){
+                    queue.offer(node.right);
+                }
+            }
+        }
+        return res;
+    }
+
+    //515. 在每个树行中找最大值
+    //您需要在二叉树的每一行中找到最大的值。
+    public List<Integer> largestValues(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        if (null == root){
+            return res;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            int max = Integer.MIN_VALUE;
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                max = Math.max(node.val,max);
+                if (null != node.left){
+                    queue.offer(node.left);
+                }
+                if (null != node.right){
+                    queue.offer(node.right);
+                }
+            }
+            res.add(max);
+        }
+        return res;
+    }
+
+    //538. 把二叉搜索树转换为累加树
+    //给出二叉 搜索 树的根节点，该树的节点值各不相同，请你将其转换为累加树（Greater Sum Tree），
+    //使每个节点 node 的新值等于原树中大于或等于 node.val 的值之和。
+    //提醒一下，二叉搜索树满足下列约束条件：
+    //节点的左子树仅包含键 小于 节点键的节点。
+    //节点的右子树仅包含键 大于 节点键的节点。
+    //左右子树也必须是二叉搜索树。
+    int sum = 0;
+    public TreeNode convertBST(TreeNode root) {
+        if(root == null){
+            return null;
+        }
+        convertBST(root.right);
+        sum += root.val;
+        root.val = sum;
+        convertBST(root.left);
+        return root;
     }
 
     //872. 叶子相似的树
