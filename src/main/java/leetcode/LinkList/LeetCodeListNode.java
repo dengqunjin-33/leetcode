@@ -1,25 +1,7 @@
 package leetcode.LinkList;
-
-import javax.xml.soap.Node;
 import java.util.*;
 
 public class LeetCodeListNode {
-
-    public static void main(String[] args) {
-        int[] x = { 2, 4, 3};
-        int[] y = { 5, 6, 4};
-        ListNode l1 = null;
-        ListNode l2 = null;
-        for (int i = x.length - 1; i >= 0; --i) {
-            ListNode temp = new ListNode(x[i]);
-            temp.next = l1;
-            l1 = temp;
-            temp = new ListNode(y[i]);
-            temp.next = l2;
-            l2 = temp;
-        }
-        addTwoNumbers(l1,l2);
-    }
 
     //2. 两数相加
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -484,6 +466,49 @@ public class LeetCodeListNode {
         return slow;
     }
 
+    //1171. 从链表中删去总和值为零的连续节点
+    //给你一个链表的头节点 head，请你编写代码，反复删去链表中由 总和 值为 0 的连续节点组成的序列，直到不存在这样的序列为止。
+    //删除完毕后，请你返回最终结果链表的头节点。
+    public static ListNode removeZeroSumSublists(ListNode head) {
+        ListNode temp = head;
+        ListNode pre = new ListNode(-1);
+        pre.next = head;
+        Map<Integer,ListNode> map = new HashMap<>();
+        map.put(0,pre);
+        int sum = 0;
+
+        int index = 0;
+        for (; null != temp; temp = temp.next,index ++) {
+            sum += temp.val;
+            if (map.containsKey(sum)){
+                ListNode node = map.get(sum).next;
+                int val = sum + node.val;
+                //把中间的sum去掉
+                while (val != sum){
+                    map.remove(val);
+                    node = node.next;
+                    val += node.val;
+                }
+                map.get(sum).next = temp.next;
+            }else {
+                map.put(sum,temp);
+            }
+        }
+
+        return pre.next;
+    }
+
+    public static void main(String[] args) {
+        int[] x = {1,2,3,-3,-2};
+        ListNode l2 = null;
+        for (int i = x.length - 1; i >= 0; --i) {
+            ListNode temp = new ListNode(x[i]);
+            temp.next = l2;
+            l2 = temp;
+        }
+        removeZeroSumSublists(l2);
+    }
+
     //1290. 二进制链表转整数
     public int getDecimalValue(ListNode head) {
         int sum = 0;
@@ -492,6 +517,32 @@ public class LeetCodeListNode {
             head = head.next;
         }
         return sum;
+    }
+
+    //1669. 合并两个链表
+    //给你两个链表 list1 和 list2 ，它们包含的元素分别为 n 个和 m 个。
+    //请你将 list1 中第 a 个节点到第 b 个节点删除，并将list2 接在被删除节点的位置。
+    public ListNode mergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+        int index = 0;
+        ListNode temp = list1;
+        ListNode start = null;
+        ListNode end = null;
+        while (null != temp){
+            if (index == a - 1){
+                start = temp;
+            }
+            if (index == b + 1){
+                end = temp;
+            }
+            temp = temp.next;
+            ++index;
+        }
+        start.next = list2;
+        while (null != list2 && null != list2.next){
+            list2 = list2.next;
+        }
+        list2.next = end;
+        return list1;
     }
 
 
