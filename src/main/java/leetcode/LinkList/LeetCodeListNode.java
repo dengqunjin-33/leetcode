@@ -545,5 +545,22 @@ public class LeetCodeListNode {
         return list1;
     }
 
-
+    //1721. 交换链表中的节点
+    //给你链表的头节点 head 和一个整数 k 。
+    //交换 链表正数第 k 个节点和倒数第 k 个节点的值后，返回链表的头节点（链表 从 1 开始索引）。
+    public ListNode swapNodes(ListNode head, int k) {
+        ListNode left = head;// 第k个节点
+        ListNode right = head;// 倒数第k个节点
+        for(int i = 1; i < k; i++){left = left.next;}
+        ListNode cur = left;
+        while(cur.next != null){
+            right = right.next;
+            cur = cur.next;
+        }
+        // 交换左右两个节点的值
+        int m = right.val;
+        right.val = left.val;
+        left.val = m;
+        return head;
+    }
 }
