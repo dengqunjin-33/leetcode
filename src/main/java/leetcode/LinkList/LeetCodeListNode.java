@@ -1,9 +1,7 @@
 package leetcode.LinkList;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.xml.soap.Node;
+import java.util.*;
 
 public class LeetCodeListNode {
 
@@ -82,6 +80,26 @@ public class LeetCodeListNode {
         }
     }
 
+    //19. 删除链表的倒数第N个节点 一趟扫描
+    public static ListNode removeNthFromEnd(ListNode head, int n) {
+        int index = 0;
+        ListNode fast = head;
+        ListNode slow = head;
+        while (null != fast.next) {
+            fast = fast.next;
+            if (index == n) {
+                slow = slow.next;
+            } else {
+                index++;
+            }
+        }
+        if (index < n) {
+            return head.next;
+        }
+        slow.next = slow.next.next;
+        return head;
+    }
+
 
     //21. 合并两个有序链表
     public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
@@ -144,6 +162,54 @@ public class LeetCodeListNode {
             }
         }
         return temp.next;
+    }
+
+    //61. 旋转链表
+    public ListNode rotateRight(ListNode head, int k) {
+        if (null == head) {
+            return head;
+        }
+        if (0 == k) {
+            return head;
+        }
+        List<Integer> list = new ArrayList<>();
+        while (null != head) {
+            list.add(head.val);
+            head = head.next;
+        }
+        for (int i = 1; i <= k % list.size(); i++) {
+            int temp = list.remove(list.size() - 1);
+            list.add(0, temp);
+        }
+        for (int i = list.size() - 1; i >= 0; --i) {
+            ListNode temp = new ListNode(list.get(i));
+            temp.next = head;
+            head = temp;
+        }
+        return head;
+    }
+
+    //61. 旋转链表 解法二
+    public static ListNode rotateRight2(ListNode head, int k) {
+        if (null == head || 0 == k) {
+            return head;
+        }
+        ListNode cur = head;
+        int len = 1;
+        while (null != cur.next) {
+            cur = cur.next;
+            ++len;
+        }
+        //头尾相连
+        cur.next = head;
+        k = len - (k % len);
+        for (int i = 1; i <= k; i++) {
+            cur = cur.next;
+        }
+
+        head = cur.next;
+        cur.next = null;
+        return head;
     }
 
     //82. 删除排序链表中的重复元素 II
@@ -221,48 +287,6 @@ public class LeetCodeListNode {
         return small.next;
     }
 
-    //141. 环形链表
-    public static boolean hasCycle(ListNode head) {
-        if (null == head || null == head.next) {
-            return false;
-        }
-        ListNode fast = head;
-        ListNode slow = head;
-        while (null != fast && null != fast.next) {
-            fast = fast.next.next;
-            slow = slow.next;
-            if (fast == slow) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //142. 环形链表 II
-    //给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
-    //为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。
-    public ListNode detectCycle(ListNode head) {
-        Set<ListNode> set = new HashSet<>();
-        while (null != head){
-            if (set.contains(head)){
-                return head;
-            }
-            set.add(head);
-            head = head.next;
-        }
-        return null;
-    }
-
-    //1290. 二进制链表转整数
-    public int getDecimalValue(ListNode head) {
-        int sum = 0;
-        while (null != head) {
-            sum = (sum << 1) + head.val;
-            head = head.next;
-        }
-        return sum;
-    }
-
     //92. 反转链表 II
     public ListNode reverseBetween(ListNode head, int m, int n) {
         if (m == n) {
@@ -294,99 +318,36 @@ public class LeetCodeListNode {
 
     }
 
-    //328. 奇偶链表
-    public static ListNode oddEvenList(ListNode head) {
+    //141. 环形链表
+    public static boolean hasCycle(ListNode head) {
         if (null == head || null == head.next) {
-            return head;
+            return false;
         }
-
-        ListNode cur = head;
-        ListNode even = head;
-        int index = 0;
-        ListNode next = head.next;
-        while (null != cur.next) {
-            if (index % 2 == 0) {
-                even = cur;
-            }
-            ListNode temp = cur.next;
-            cur.next = cur.next.next;
-            cur = temp;
-            ++index;
-        }
-        if (index % 2 == 0) {
-            even.next = cur;
-            even = even.next;
-        }
-        even.next = next;
-        return head;
-    }
-
-    //19. 删除链表的倒数第N个节点 一趟扫描
-    public static ListNode removeNthFromEnd(ListNode head, int n) {
-        int index = 0;
         ListNode fast = head;
         ListNode slow = head;
-        while (null != fast.next) {
-            fast = fast.next;
-            if (index == n) {
-                slow = slow.next;
-            } else {
-                index++;
+        while (null != fast && null != fast.next) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                return true;
             }
         }
-        if (index < n) {
-            return head.next;
-        }
-        slow.next = slow.next.next;
-        return head;
+        return false;
     }
 
-    //61. 旋转链表
-    public ListNode rotateRight(ListNode head, int k) {
-        if (null == head) {
-            return head;
-        }
-        if (0 == k) {
-            return head;
-        }
-        List<Integer> list = new ArrayList<>();
-        while (null != head) {
-            list.add(head.val);
+    //142. 环形链表 II
+    //给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+    //为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。
+    public ListNode detectCycle(ListNode head) {
+        Set<ListNode> set = new HashSet<>();
+        while (null != head){
+            if (set.contains(head)){
+                return head;
+            }
+            set.add(head);
             head = head.next;
         }
-        for (int i = 1; i <= k % list.size(); i++) {
-            int temp = list.remove(list.size() - 1);
-            list.add(0, temp);
-        }
-        for (int i = list.size() - 1; i >= 0; --i) {
-            ListNode temp = new ListNode(list.get(i));
-            temp.next = head;
-            head = temp;
-        }
-        return head;
-    }
-
-    //61. 旋转链表 解法二
-    public static ListNode rotateRight2(ListNode head, int k) {
-        if (null == head || 0 == k) {
-            return head;
-        }
-        ListNode cur = head;
-        int len = 1;
-        while (null != cur.next) {
-            cur = cur.next;
-            ++len;
-        }
-        //头尾相连
-        cur.next = head;
-        k = len - (k % len);
-        for (int i = 1; i <= k; i++) {
-            cur = cur.next;
-        }
-
-        head = cur.next;
-        cur.next = null;
-        return head;
+        return null;
     }
 
     //143. 重排链表
@@ -434,6 +395,104 @@ public class LeetCodeListNode {
         list.get(left).next = null;
     }
 
+    //160. 相交链表
+    //给你两个单链表的头节点 headA 和 headB ，请你找出并返回两个单链表相交的起始节点。如果两个链表没有交点，返回 null 。
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode tempA = headA;
+        ListNode tempB = headB;
+        while (tempA != tempB){
+            tempA = null == tempA ? headB : tempA.next;
+            tempB = null == tempB ? headA : tempB.next;
+        }
+        return tempA;
+    }
+
+    //迭代
+    //206. 反转链表
+    //给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+    public ListNode reverseList(ListNode head) {
+         ListNode listNode = null;
+         while (null != head){
+             ListNode temp = new ListNode(head.val);
+             temp.next = listNode;
+             listNode = temp;
+             head = head.next;
+         }
+         return listNode;
+    }
+
+    //234. 回文链表
+    //请判断一个链表是否为回文链表。
+    public boolean isPalindrome(ListNode head) {
+        List<Integer> list = new ArrayList<>();
+        while (null != head){
+            list.add(head.val);
+            head = head.next;
+        }
+        for (int i = 0; i < list.size() >> 1; i++) {
+            if (!list.get(i).equals(list.get(list.size() - i - 1))){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //237. 删除链表中的节点
+    //请编写一个函数，使其可以删除某个链表中给定的（非末尾）节点。传入函数的唯一参数为 要被删除的节点 。
+    public void deleteNode(ListNode node) {
+        node.val = node.next.val;
+        node.next = node.next.next;
+    }
+
+    //328. 奇偶链表
+    public static ListNode oddEvenList(ListNode head) {
+        if (null == head || null == head.next) {
+            return head;
+        }
+
+        ListNode cur = head;
+        ListNode even = head;
+        int index = 0;
+        ListNode next = head.next;
+        while (null != cur.next) {
+            if (index % 2 == 0) {
+                even = cur;
+            }
+            ListNode temp = cur.next;
+            cur.next = cur.next.next;
+            cur = temp;
+            ++index;
+        }
+        if (index % 2 == 0) {
+            even.next = cur;
+            even = even.next;
+        }
+        even.next = next;
+        return head;
+    }
+
+    //876. 链表的中间结点
+    //给定一个头结点为 head 的非空单链表，返回链表的中间结点。
+    //如果有两个中间结点，则返回第二个中间结点。
+    public ListNode middleNode(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        while (null != fast && null != fast.next){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    //1290. 二进制链表转整数
+    public int getDecimalValue(ListNode head) {
+        int sum = 0;
+        while (null != head) {
+            sum = (sum << 1) + head.val;
+            head = head.next;
+        }
+        return sum;
+    }
 
 
 }
