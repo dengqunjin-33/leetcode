@@ -1,9 +1,7 @@
 package leetcode.DP;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LeetCodeDp {
@@ -87,6 +85,40 @@ public class LeetCodeDp {
         }
         return secend;
     }
+
+    //377. 组合总和 Ⅳ
+    //给你一个由 不同 整数组成的数组 nums ，和一个目标整数 target 。请你从 nums 中找出并返回总和为 target 的元素组合的个数。
+    //题目数据保证答案符合 32 位整数范围。
+    public int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        for (int i = 1; i <= target; i++) {
+            for (int num : nums) {
+                if (num <= i) {
+                    dp[i] += dp[i - num];
+                }
+            }
+        }
+        return dp[target];
+    }
+
+    //413. 等差数列划分
+    //如果一个数列至少有三个元素，并且任意两个相邻元素之差相同，则称该数列为等差数列。
+    public int numberOfArithmeticSlices(int[] nums) {
+        if (nums.length < 3){
+            return 0;
+        }
+        int[] dp = new int[nums.length];
+        int sum = 0;
+        for (int i = 2; i < nums.length; i++) {
+            if (nums[i] - nums[i - 1] == nums[i - 1] - nums[i - 2]){
+                dp[i] = dp[i - 1] + 1;
+            }
+            sum += dp[i];
+        }
+        return sum;
+    }
+
 
     //518. 零钱兑换 II
     //给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。假设每一种面额的硬币有无限个。SSS
