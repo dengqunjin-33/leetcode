@@ -2,6 +2,7 @@ package leetcode.DP;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LeetCodeDp {
@@ -79,6 +80,39 @@ public class LeetCodeDp {
             secend = temp;
         }
         return secend;
+    }
+
+    //279. 完全平方数
+    //给定正整数 n，找到若干个完全平方数（比如 1, 4, 9, 16, ...）使得它们的和等于 n。你需要让组成和的完全平方数的个数最少。
+    //给你一个整数 n ，返回和为 n 的完全平方数的 最少数量 。
+    //完全平方数 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，1、4、9 和 16 都是完全平方数，而 3 和 11 不是。
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        for(int i = 1;i <= n;i++){
+            dp[i] = i;
+            for (int j = 1; i - j * j >= 0; j++) {
+                dp[i] = Math.min(dp[i], dp[i - j * j] + 1); // 动态转移方程
+            }
+        }
+        return dp[n];
+    }
+
+    //322. 零钱兑换
+    //给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。
+    //你可以认为每种硬币的数量是无限的。
+    public int coinChange(int[] coins, int amount) {
+        int max = amount + 1;
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, max);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < coins.length; j++) {
+                if (coins[j] <= i) {
+                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+                }
+            }
+        }
+        return dp[amount] > amount ? -1 : dp[amount];
     }
 
     //377. 组合总和 Ⅳ

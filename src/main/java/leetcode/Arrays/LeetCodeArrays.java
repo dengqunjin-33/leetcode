@@ -1,5 +1,7 @@
 package leetcode.Arrays;
 
+import java.util.*;
+
 public class LeetCodeArrays {
 
     //1. 两数之和
@@ -85,4 +87,23 @@ public class LeetCodeArrays {
         }
         return ans;
     }
+
+    //560. 和为K的子数组
+    //给定一个整数数组和一个整数 k，你需要找到该数组中和为 k 的连续的子数组的个数。
+    public static int subarraySum(int[] nums, int k) {
+        int count = 0;
+        int pre = 0;
+        Map<Integer,Integer> map = new HashMap();
+        map.put(0,1);
+        for (int i = 0; i < nums.length; i++) {
+            pre += nums[i];
+            if (map.containsKey(pre - k)){
+                count += map.get(pre - k);
+            }
+            map.put(pre, map.getOrDefault(pre, 0) + 1);
+        }
+        return count;
+    }
+
+
 }
