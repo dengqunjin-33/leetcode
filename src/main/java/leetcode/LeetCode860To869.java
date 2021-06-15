@@ -23,7 +23,7 @@ public class LeetCode860To869 {
             if (1 == (n >>> i & 1)) {
                 max = i;
                 if (flag) {
-                    instance = instance >= min - max ? instance : min - max;
+                    instance = Math.max(instance, min - max);
                 }
                 min = i;
                 flag = true;

@@ -88,6 +88,48 @@ public class LeetCodeArrays {
         return ans;
     }
 
+    //215. 数组中的第K个最大元素
+    //在未排序的数组中找到第 k 个最大的元素。请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
+    public static int findKthLargest(int[] nums, int k) {
+        if (k > nums.length){
+            return -1;
+        }
+        sortQuick(nums,0,nums.length - 1);
+        return nums[nums.length - k];
+    }
+
+    public static void sortQuick(int[] arr, int start, int end){
+        if (start > end){
+            return;
+        }
+        int i = start;
+        int j = end;
+        int temp = arr[start];
+        while (i != j){
+            while (temp <= arr[j] && i < j){
+                j --;
+            }
+            while (temp >= arr[i] && i < j){
+                i ++;
+            }
+
+            if (i < j){
+                arr[i] ^= arr[j];
+                arr[j] ^= arr[i];
+                arr[i] ^= arr[j];
+            }
+
+        }
+        arr[start] = arr[i];
+        arr[i] = temp;
+        sortQuick(arr,start,i - 1);
+        sortQuick(arr,i + 1, end);
+    }
+
+    public static void main(String[] args) {
+        findKthLargest(new int[]{2,1},2);
+    }
+
     //560. 和为K的子数组
     //给定一个整数数组和一个整数 k，你需要找到该数组中和为 k 的连续的子数组的个数。
     public static int subarraySum(int[] nums, int k) {
