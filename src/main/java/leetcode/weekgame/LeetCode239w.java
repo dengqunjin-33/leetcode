@@ -24,7 +24,7 @@ public class LeetCode239w {
         return 0;
     }
 
-    //todo
+    //大佬的(为什么我就没想到呢。。。)
     //1849. 将字符串拆分为递减的连续值
     //给你一个仅由数字组成的字符串 s 。
     //请你判断能否将 s 拆分成两个或者多个 非空子字符串 ，使子字符串的 数值 按 降序 排列，且每两个 相邻子字符串 的数值之 差 等于 1 。
@@ -33,23 +33,47 @@ public class LeetCode239w {
     //如果可以按要求拆分 s ，返回 true ；否则，返回 false 。
     //子字符串 是字符串中的一个连续字符序列。
     public boolean splitString(String s) {
-        return true;
+        long t = 0;     //枚举第一个数字的值，因为s长度为20，所以会超过int，要用long类型
+        for (int i = 0; i < s.length() - 1; i++) {  //因为必须要分割成两个子串，所以最后一个字符不可能是组成第一个数字的字符，我们这里也是为了防止刚好20位导致long也会溢出的情况
+            t = t * 10 + s.charAt(i) - '0'; //把当前字符加入到组成第一个数字的字符集中
+            if(t > 10000000000L)    //如果t大于10^10那么后面最多还有9位数，所以不可能组成递减的连续值
+            {
+                return false;
+            }
+            if (dfs(s, t, i + 1))   //把t当作第一个数字，找寻后面递减的数
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
-    //todo
-    //1850. 邻位交换的最小次数
-    //给你一个表示大整数的字符串 num ，和一个整数 k 。
-    //如果某个整数是 num 中各位数字的一个 排列 且它的 值大于 num ，则称这个整数为 妙数 。可能存在很多妙数，但是只需要关注 值最小 的那些。
-    //例如，num = "5489355142" ：
-    //第 1 个最小妙数是 "5489355214"
-    //第 2 个最小妙数是 "5489355241"
-    //第 3 个最小妙数是 "5489355412"
-    //第 4 个最小妙数是 "5489355421"
-    //返回要得到第 k 个 最小妙数 需要对 num 执行的 相邻位数字交换的最小次数 。
-    //测试用例是按存在第 k 个最小妙数而生成的。
-    public int getMinSwaps(String num, int k) {
-        return 1;
+    //s要分割的字符串；pre前面一个数的值；k当前字符串已经用到了哪个位置
+    private boolean dfs(String s, long pre, int k) {
+        //代表能组成递减的连续值
+        if (k == s.length()) {
+            return true;
+        }
+        //枚举pre后面的一个数字的值
+        long t = 0;
+        //从第k个字符开始组成数字
+        for (int i = k; i < s.length(); i++) {
+            t = t * 10 + s.charAt(i) -'0';
+            if(t > 10000000000L) {
+                return false;
+            }
+            //如果前面一个数字和当前数组相差为1，则继续往下面寻找满足条件的数组
+            if (pre - 1 == t && dfs(s, t, i + 1))
+            {
+                return true;
+            }
+            //当前组成的数大于前面的数表示不符合要求，直接返回false
+            if (t >= pre)
+            {
+                return false;
+            }
+        }
+        return false;
     }
-
 
 }

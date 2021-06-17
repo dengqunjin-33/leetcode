@@ -115,4 +115,41 @@ public class LeetCode240w {
                 prefixNums[end] - prefixNums[start - 1];
         return sum * min;
     }
+
+    //自己的  超时了
+    //1856. 子数组最小乘积的最大值
+    //一个数组的 最小乘积 定义为这个数组中 最小值 乘以 数组的 和 。
+    //比方说，数组 [3,2,5] （最小值是 2）的最小乘积为 2 * (3+2+5) = 2 * 10 = 20 。
+    //给你一个正整数数组 nums ，请你返回 nums 任意 非空子数组 的最小乘积 的 最大值 。由于答案可能很大，请你返回答案对  109 + 7 取余 的结果。
+    //请注意，最小乘积的最大值考虑的是取余操作 之前 的结果。题目保证最小乘积的最大值在 不取余 的情况下可以用 64 位有符号整数 保存。
+    //子数组 定义为一个数组的 连续 部分。
+    public static int maxSumMinProduct2(int[] nums) {
+        long mod = 1000000000+7;
+        long res = 0;
+        long [] sums = new long[nums.length + 1];
+        sums[0] = 0;
+        for (int i=1;i < sums.length;i++){
+            sums[i] = sums[i-1]+nums[i - 1] ;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            int left = i - 1;
+            int right = i + 1;
+            while (left >= 0){
+                if (nums[left] >= nums[i]){
+                    --left;
+                }else {
+                    break;
+                }
+            }
+            while (right < nums.length){
+                if (nums[right] >= nums[i]){
+                    ++right;
+                }else {
+                    break;
+                }
+            }
+            res =  Math.max(res,(nums[i] * (sums[right] - sums[left + 1])));
+        }
+        return (int) (res % mod);
+    }
 }
