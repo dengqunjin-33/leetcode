@@ -81,7 +81,25 @@ public class LeetCodeSumPrefix {
         return res;
     }
 
+    //713. 乘积小于K的子数组
+    //给定一个正整数数组 nums。
+    //找出该数组内乘积小于 k 的连续的子数组的个数。
+    public static int numSubarrayProductLessThanK(int[] nums, int k) {
+        if (k <= 1) {
+            return 0;
+        }
+        int prod = 1, ans = 0, left = 0;
+        for (int right = 0; right < nums.length; right++) {
+            prod *= nums[right];
+            while (prod >= k) {
+                prod /= nums[left++];
+            }
+            ans += right - left + 1;
+        }
+        return ans;
+    }
+
     public static void main(String[] args) {
-        findMaxLength(new int[]{1,0});
+        numSubarrayProductLessThanK(new int[]{10,9,10,4,3,8,3,3,6,2,10,10,9,3},19);
     }
 }

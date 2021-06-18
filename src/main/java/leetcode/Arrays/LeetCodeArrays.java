@@ -126,10 +126,6 @@ public class LeetCodeArrays {
         sortQuick(arr,i + 1, end);
     }
 
-    public static void main(String[] args) {
-        findKthLargest(new int[]{2,1},2);
-    }
-
     //560. 和为K的子数组
     //给定一个整数数组和一个整数 k，你需要找到该数组中和为 k 的连续的子数组的个数。
     public static int subarraySum(int[] nums, int k) {
