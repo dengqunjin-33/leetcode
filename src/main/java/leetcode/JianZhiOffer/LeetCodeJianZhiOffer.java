@@ -150,6 +150,40 @@ public class LeetCodeJianZhiOffer {
         return numbers[0];
     }
 
+    //剑指 Offer 12. 矩阵中的路径
+    //给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。
+    //单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+    public boolean exist(char[][] board, String word) {
+        char[] words = word.toCharArray();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (exist(board,words,i,j,0)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean exist(char[][] board,char[] words,int x,int y,int index) {
+        if (index == words.length){
+            return true;
+        }
+        if (x < 0 || x == board.length || y < 0 || y == board[0].length){
+            return false;
+        }
+        if (words[index] != board[x][y]){
+            return false;
+        }
+        board[x][y] = '\0';
+        boolean res = exist(board,words,x + 1,y,index + 1)
+                || exist(board,words,x,y + 1,index + 1)
+                || exist(board,words,x - 1,y,index + 1)
+                || exist(board,words,x,y - 1,index + 1);
+        board[x][y] = words[index];
+        return res;
+    }
+
     //剑指 Offer 15. 二进制中1的个数
     //请实现一个函数，输入一个整数（以二进制串形式），输出该数二进制表示中 1 的个数。
     //例如，把 9 表示成二进制是 1001，有 2 位是 1。因此，如果输入 9，则该函数输出 2。
@@ -161,6 +195,28 @@ public class LeetCodeJianZhiOffer {
             }
         }
         return sum;
+    }
+
+    //剑指 Offer 16. 数值的整数次方
+    //实现 pow(x, n) ，即计算 x 的 n 次幂函数（即，xn）。不得使用库函数，同时不需要考虑大数问题。
+    public double myPow(double x, int n) {
+        if(x == 0) {
+            return 0;
+        }
+        long b = n;
+        double res = 1.0;
+        if(b < 0) {
+            x = 1 / x;
+            b = -b;
+        }
+        while(b > 0) {
+            if((b & 1) == 1) {
+                res *= x;
+            }
+            x *= x;
+            b >>= 1;
+        }
+        return res;
     }
 
     //剑指 Offer 17. 打印从1到最大的n位数
@@ -608,8 +664,36 @@ public class LeetCodeJianZhiOffer {
         TreeNode(int x) { val = x; }
     }
 
+    //剑指 Offer 55 - I. 二叉树的深度
+    //输入一棵二叉树的根节点，求该树的深度。从根节点到叶节点依次经过的节点（含根、叶节点）形成树的一条路径，最长路径的长度为树的深度。
+    public int maxDepth(TreeNode root) {
+        if (null == root){
+            return 0;
+        }
+        int depth = 0;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            ++depth;
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode poll = queue.poll();
+                assert poll != null;
+                if (null != poll.left){
+                    queue.offer(poll.left);
+                }
+                if (null != poll.right){
+                    queue.offer(poll.right);
+                }
+            }
+        }
+        return depth;
+    }
+
+
+
    //剑指 Offer 56 - II. 数组中数字出现的次数 II
-    //在一个数组 nums 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。
+   //在一个数组 nums 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。
    public int singleNumber(int[] nums) {
         int ones = 0; int twos = 0;
        for(int num : nums){
