@@ -300,16 +300,31 @@ public class LeetCodeJianZhiOffer {
         return dum.next;
     }
 
-    //剑指 Offer 42. 连续子数组的最大和
-    //输入一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。
-    //要求时间复杂度为O(n)。
-    public static int maxSubArray(int[] nums) {
-        int res = nums[0];
-        for(int i = 1; i < nums.length; i++) {
-            nums[i] += Math.max(nums[i - 1], 0);
-            res = Math.max(res, nums[i]);
+    //剑指 Offer 38. 字符串的排列
+    //输入一个字符串，打印出该字符串中字符的所有排列。
+    //你可以以任意顺序返回这个字符串数组，但里面不能有重复元素。
+    public String[] permutation(String s) {
+        Set<String> set = new HashSet<>();
+        permutation(set,new boolean[s.length()],new StringBuffer(),s,0);
+        return  set.toArray(new String[0]);
+    }
+
+    public void permutation(Set<String>set,boolean[] flag,StringBuffer temp,String s,int index) {
+        if (index == s.length()){
+            set.add(temp.toString());
+            return ;
         }
-        return res;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (flag[i]){
+                continue;
+            }
+            flag[i] = true;
+            temp.append(s.charAt(i));
+            permutation(set,flag,temp,s,index + 1);
+            temp.deleteCharAt(temp.length() - 1);
+            flag[i] = false;
+        }
     }
 
     //剑指 Offer 39. 数组中出现次数超过一半的数字
@@ -329,6 +344,41 @@ public class LeetCodeJianZhiOffer {
             target[i] = arr[i];
         }
         return target;
+    }
+
+    //剑指 Offer 42. 连续子数组的最大和
+    //输入一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。
+    //要求时间复杂度为O(n)。
+    public static int maxSubArray(int[] nums) {
+        int res = nums[0];
+        for(int i = 1; i < nums.length; i++) {
+            nums[i] += Math.max(nums[i - 1], 0);
+            res = Math.max(res, nums[i]);
+        }
+        return res;
+    }
+
+    //剑指 Offer 43. 1～n 整数中 1 出现的次数
+    //输入一个整数 n ，求1～n这n个整数的十进制表示中1出现的次数。
+    //例如，输入12，1～12这些整数中包含1 的数字有1、10、11和12，1一共出现了5次。
+    public static int countDigitOne(int n) {
+        long tempn = n;
+        long count  = 0;
+        long bit = 10;
+        int index = 0;
+        while (tempn != 0){
+            long temp = tempn % bit;
+            tempn = tempn - temp;
+            long base = bit / 10;
+            if (temp / base == 1){
+                count +=  (n % base) + 1 + (temp / base) * ((long) index * base / 10);
+            }else if (temp / base > 1){
+                count += base + (temp / base) * ((long) index * base / 10);
+            }
+            bit *= 10;
+            ++index;
+        }
+        return (int) count;
     }
 
     //剑指 Offer 44. 数字序列中某一位的数字
