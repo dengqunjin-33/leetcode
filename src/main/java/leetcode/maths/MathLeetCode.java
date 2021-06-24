@@ -1,5 +1,7 @@
 package leetcode.maths;
 
+import java.util.*;
+
 public class MathLeetCode {
 
     //7. 整数反转
@@ -43,6 +45,212 @@ public class MathLeetCode {
             temp /= 10;
         }
         return result == x;
+    }
+
+    //自己写的
+    //149. 直线上最多的点数
+    //给你一个数组 points ，其中 points[i] = [xi, yi] 表示 X-Y 平面上的一个点。求最多有多少个点在同一条直线上。
+    public static int maxPoints(int[][] points) {
+        if(points.length < 2){
+            return points.length;
+        }
+        //y = kx + b
+        Map<MyPoint, List<Integer>> map = new HashMap<>();
+        Map<Integer,List<Integer>> lineY  = new HashMap<>();
+        int max = 0;
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i+1; j < points.length; j++) {
+                //x = a的情况
+                if (points[i][0]  == points[j][0]){
+                    List<Integer> list;
+                    if (lineY.containsKey(points[j][0])){
+                        list = lineY.get(points[j][0]);
+                        if (!list.contains(points[i][1])){
+                            list.add(points[i][1]);
+                        }
+                        if (!list.contains(points[j][1])){
+                            list.add(points[j][1]);
+                        }
+                    }else {
+                        list = new ArrayList();
+                        list.add(points[i][1]);
+                        list.add(points[j][1]);
+                        lineY.put(points[j][0],list);
+                    }
+                    max = Math.max(max,list.size());
+                }else {
+                    double k = (points[i][1] - points[j][1] + 0.0) / (points[i][0] - points[j][0]);
+                    double b = points[i][1] - points[i][0] * k;
+                    MyPoint point = new MyPoint(k,b);
+                    List<Integer> list;
+                    if (map.containsKey(point)){
+                        list = map.get(point);
+                        if (!list.contains(points[i][0])){
+                            list.add(points[i][0]);
+                        }
+                        if (!list.contains(points[j][0])){
+                            list.add(points[j][0]);
+                        }
+                    }else {
+                        list = new ArrayList();
+                        list.add(points[i][0]);
+                        list.add(points[j][0]);
+                        map.put(point,list);
+                    }
+                    max = Math.max(max,list.size());
+                }
+            }
+        }
+
+        return max;
+    }
+
+    //定义斜率结构
+    static class MyPoint{
+        double k;
+        double b;
+
+        public MyPoint(double b){
+            this.b = b;
+        }
+
+        public MyPoint(double k,double b){
+            this.k = k;
+            this.b = b;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            MyPoint myPoint = (MyPoint) o;
+            return Double.compare(myPoint.k, k) == 0 && Double.compare(myPoint.b, b) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(k, b);
+        }
+    }
+
+    //看了大佬的思路后自己写的
+    //额 效率没有我上面高,因为字符串拼接很耗费性能
+    //149. 直线上最多的点数
+    //给你一个数组 points ，其中 points[i] = [xi, yi] 表示 X-Y 平面上的一个点。求最多有多少个点在同一条直线上。
+    public static int maxPoints2(int[][] points) {
+        if(points.length < 2){
+            return points.length;
+        }
+        //y = kx + b
+        Map<String, List<Integer>> map = new HashMap<>();
+        int max = 0;
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i+1; j < points.length; j++) {
+                //x = a的情况
+                if (points[i][0]  == points[j][0]){
+                    List<Integer> list;
+                    if (map.containsKey("_" + points[j][0])){
+                        list = map.get("_" + points[j][0]);
+                        if (!list.contains(points[i][1])){
+                            list.add(points[i][1]);
+                        }
+                        if (!list.contains(points[j][1])){
+                            list.add(points[j][1]);
+                        }
+                    }else {
+                        list = new ArrayList();
+                        list.add(points[i][1]);
+                        list.add(points[j][1]);
+                        map.put("_" + points[j][0],list);
+                    }
+                    max = Math.max(max,list.size());
+                }else {
+                    double k = (points[i][1] - points[j][1] + 0.0) / (points[i][0] - points[j][0]);
+                    double b = points[i][1] - points[i][0] * k;
+                    List<Integer> list;
+                    if (map.containsKey(k + "_" + b)){
+                        list = map.get(k + "_" + b);
+                        if (!list.contains(points[i][0])){
+                            list.add(points[i][0]);
+                        }
+                        if (!list.contains(points[j][0])){
+                            list.add(points[j][0]);
+                        }
+                    }else {
+                        list = new ArrayList();
+                        list.add(points[i][0]);
+                        list.add(points[j][0]);
+                        map.put(k + "_" + b,list);
+                    }
+                    max = Math.max(max,list.size());
+                }
+            }
+        }
+
+        return max;
+    }
+
+    //在大佬的基础上优化了一下
+    //额 效率比我的效率高
+    //149. 直线上最多的点数
+    private int n;
+    public int maxPoints3(int[][] points) {
+        //长度小于等于2，直接返回
+        n = points.length;
+        if(n<=2){
+            return n;
+        }
+        return process(points);
+    }
+    public int process(int[][] points){
+        int res = 0;
+        //遍历所有点
+        for (int i = 0; i <n ; i++) {
+            //当直线上的数大于n/2时，此直线上的数最多，没有其他直线的数会大于n/2
+            //第i个点所在直线的数目res >= n-i时返回，从第i个节点出发最多找到n-i个点在同一直线上
+            if(res > n/2 || res >= n-i){
+                break;
+            }
+            Map<Integer,Integer> map = new HashMap<>();
+            //该点直线上前面的点已经包含了后面的点，所以不用遍历前面的点
+            for (int j = i+1; j <n ; j++) {
+                int dx = points[i][0] - points[j][0];
+                int dy = points[i][1] - points[j][1];
+                if(dx == 0){
+                    dy = 1;
+                }else if(dy == 0){
+                    dx = 1;
+                }else {
+                    //需要统一 -1/2和 1/-2的情况
+                    if(dy < 0){
+                        dx = -dx;
+                        dy = -dy;
+                    }
+                    //求最简分式
+                    int gcdXY = gcd(Math.abs(dx),Math.abs(dy));
+                    dx /= gcdXY;
+                    dy /= gcdXY;
+                }
+                int key = dx*931+dy*937;
+                int value;
+                if(null == map.get(key)){
+                    value = 2;
+                }else{
+                    value = map.get(key) + 1;
+                }
+                map.put(key,value);
+                res = Math.max(value,res);
+            }
+        }
+        return res;
+    }
+    //求最大公因素
+    public int gcd(int a,int b){
+        return b == 0 ?a:gcd(b,a%b);
     }
 
     //223. 矩形面积

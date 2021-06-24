@@ -118,6 +118,47 @@ public class LeetCodeListNode {
         return target.next;
     }
 
+    //23. 合并K个升序链表
+    //给你一个链表数组，每个链表都已经按升序排列。
+    //请你将所有链表合并到一个升序链表中，返回合并后的链表。
+    public static ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0){
+            return null;
+        }
+        if (lists.length == 1){
+            return lists[0];
+        }
+        TreeSet<Integer> treeSet = new TreeSet<>(((o1, o2) -> o1 > o2 ? 1 : -1));
+        ListNode res = new ListNode(0);
+        for (ListNode temp : lists) {
+            while (null != temp) {
+                treeSet.add(temp.val);
+                temp = temp.next;
+            }
+        }
+        ListNode cur = res;
+        for (Integer integer : treeSet) {
+            cur.next = new ListNode(integer);
+            cur = cur.next;
+        }
+        return res.next;
+    }
+
+    public static void main(String[] args) {
+        int[][] x = {{1,4,5},{1,3,4},{2,6}};
+        List<ListNode> list = new ArrayList<>();
+        for (int i = 0; i < x.length; i++) {
+            ListNode l2 = null;
+            for (int j = 0; j < x[i].length; j++) {
+                ListNode temp = new ListNode(x[i][j]);
+                temp.next = l2;
+                l2 = temp;
+            }
+            list.add(l2);
+        }
+        mergeKLists(list.toArray(new ListNode[list.size()]));
+    }
+
     //24. 两两交换链表中的节点
     //给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
     //你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
@@ -144,6 +185,91 @@ public class LeetCodeListNode {
             }
         }
         return temp.next;
+    }
+
+    //自己的  空间和时间都要很多
+    //25. K 个一组翻转链表
+    //给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
+    //k 是一个正整数，它的值小于或等于链表的长度。
+    //如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+    //进阶：
+    //你可以设计一个只使用常数额外空间的算法来解决此问题吗？
+    //你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+    public static ListNode reverseKGroup(ListNode head, int k) {
+        if (k == 1){
+            return head;
+        }
+        List<ListNode> list = new ArrayList<>();
+        ListNode temp = head;
+        while (null != temp){
+            list.add(temp);
+            temp = temp.next;
+        }
+        int step = list.size() / k;
+        for (int i = 1; i <= step; i++) {
+            int end = i * k - 1;
+            int start = (i - 1) * k;
+            while (start < end){
+                ListNode tempNode = list.get(end);
+                list.set(end,list.get(start));
+                list.set(start,tempNode);
+                ++start;
+                --end;
+            }
+        }
+        for (int i = 0; i < list.size() - 1; i++) {
+            list.get(i).next = list.get(i + 1);
+        }
+        list.get(list.size() - 1) .next = null;
+        return list.get(0);
+    }
+
+    //大佬写的
+    //25. K 个一组翻转链表
+    //给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
+    //k 是一个正整数，它的值小于或等于链表的长度。
+    //如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+    //进阶：
+    //你可以设计一个只使用常数额外空间的算法来解决此问题吗？
+    //你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+    public ListNode reverseKGroup2(ListNode head, int k) {
+        ListNode hair = new ListNode(0);
+        hair.next = head;
+        ListNode pre = hair;
+
+        while (head != null) {
+            ListNode tail = pre;
+            // 查看剩余部分长度是否大于等于 k
+            for (int i = 0; i < k; ++i) {
+                tail = tail.next;
+                if (tail == null) {
+                    return hair.next;
+                }
+            }
+            ListNode nex = tail.next;
+            ListNode[] reverse = myReverse(head, tail);
+            head = reverse[0];
+            tail = reverse[1];
+            // 把子链表重新接回原链表
+            pre.next = head;
+            tail.next = nex;
+            pre = tail;
+            head = tail.next;
+        }
+
+        return hair.next;
+    }
+
+    public ListNode[] myReverse(ListNode head, ListNode tail) {
+        ListNode prev = tail.next;
+        ListNode p = head;
+        while (prev != tail) {
+            ListNode nex = p.next;
+            p.next = prev;
+            prev = p;
+            p = nex;
+        }
+        return new ListNode[]{tail, head};
     }
 
     //61. 旋转链表
@@ -498,16 +624,7 @@ public class LeetCodeListNode {
         return pre.next;
     }
 
-    public static void main(String[] args) {
-        int[] x = {1,2,3,-3,-2};
-        ListNode l2 = null;
-        for (int i = x.length - 1; i >= 0; --i) {
-            ListNode temp = new ListNode(x[i]);
-            temp.next = l2;
-            l2 = temp;
-        }
-        removeZeroSumSublists(l2);
-    }
+
 
     //1290. 二进制链表转整数
     public int getDecimalValue(ListNode head) {
