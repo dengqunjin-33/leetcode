@@ -88,6 +88,52 @@ public class LeetCodeArrays {
         return ans;
     }
 
+    //我自己的
+    //41. 缺失的第一个正数
+    //给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+    //请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。
+    public int firstMissingPositive(int[] nums) {
+        Arrays.sort(nums);
+        int res = 1;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == res){
+                res ++;
+            }else if (nums[i] > res){
+                return res;
+            }
+        }
+        return res;
+    }
+
+    //大佬的 哈希表思路
+    //41. 缺失的第一个正数
+    //给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+    //请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。
+    public static int firstMissingPositive2(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] <= 0) {
+                nums[i] = n + 1;
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            int num = Math.abs(nums[i]);
+            if (num <= n) {
+                nums[num - 1] = -Math.abs(nums[num - 1]);
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] > 0) {
+                return i + 1;
+            }
+        }
+        return n + 1;
+    }
+
+    public static void main(String[] args) {
+        firstMissingPositive2(new int[]{3,4,-1,1});
+    }
+
     //自己写的  很慢
     //73. 矩阵置零
     //给定一个 m x n 的矩阵，如果一个元素为 0 ，则将其所在行和列的所有元素都设为 0 。请使用 原地 算法。
@@ -280,9 +326,9 @@ public class LeetCodeArrays {
         return flag[i][j] = index;
     }
 
-    public static void main(String[] args) {
-        longestIncreasingPath(new int[][]{{9,9,4},{6,6,8},{2,1,1}});
-    }
+//    public static void main(String[] args) {
+//        longestIncreasingPath(new int[][]{{9,9,4},{6,6,8},{2,1,1}});
+//    }
 
     //540. 有序数组中的单一元素
     //给定一个只包含整数的有序数组，每个元素都会出现两次，唯有一个数只会出现一次，找出这个数。
@@ -315,6 +361,4 @@ public class LeetCodeArrays {
         }
         return count;
     }
-
-
 }
