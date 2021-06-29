@@ -1,5 +1,6 @@
 package leetcode.maths;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class MathLeetCode {
@@ -46,6 +47,76 @@ public class MathLeetCode {
         }
         return result == x;
     }
+
+    //我的暴力解法  超时了
+    //84. 柱状图中最大的矩形
+    //给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。
+    //求在该柱状图中，能够勾勒出来的矩形的最大面积。
+    public int largestRectangleArea(int[] heights) {
+        int res = 0;
+        for (int i = 0; i < heights.length; i++) {
+            int temp = heights[i];
+            int count = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (heights[j] >= temp){
+                    ++count;
+                }else {
+                    break;
+                }
+            }
+            for (int j = i + 1; j < heights.length; j++) {
+                if (heights[j] >= temp){
+                    ++count;
+                }else {
+                    break;
+                }
+            }
+            res = Math.max(res,count * temp);
+        }
+        return res;
+    }
+
+    //大佬的单调栈
+    //84. 柱状图中最大的矩形
+    //给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。
+    //求在该柱状图中，能够勾勒出来的矩形的最大面积。
+    public static int largestRectangleArea2(int[] heights) {
+        int n = heights.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+
+        Stack<Integer> mono_stack = new Stack<>();
+        for (int i = 0; i < n; ++i) {
+            while (!mono_stack.isEmpty() && heights[mono_stack.peek()] >= heights[i]) {
+                mono_stack.pop();
+            }
+            //确定左边界
+            left[i] = (mono_stack.isEmpty() ? -1 : mono_stack.peek());
+            mono_stack.push(i);
+        }
+
+        mono_stack.clear();
+
+        for (int i = n - 1; i >= 0; --i) {
+            while (!mono_stack.isEmpty() && heights[mono_stack.peek()] >= heights[i]) {
+                mono_stack.pop();
+            }
+            //确定右边界
+            right[i] = (mono_stack.isEmpty() ? n : mono_stack.peek());
+            mono_stack.push(i);
+        }
+
+        int ans = 0;
+        for (int i = 0; i < n; ++i) {
+            ans = Math.max(ans, (right[i] - left[i] - 1) * heights[i]);
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        largestRectangleArea2(new int[]{2,1,5,6,2,3});
+    }
+
 
     //自己写的
     //149. 直线上最多的点数
