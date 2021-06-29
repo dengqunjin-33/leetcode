@@ -71,4 +71,89 @@ public class LeetCodeDFS {
         count += maxAreaOfIsland(grid,x,y - 1);
         return count;
     }
+
+    //60. 排列序列
+    //给出集合 [1,2,3,...,n]，其所有元素共有 n! 种排列。
+    //按大小顺序列出所有排列情况，并一一标记，当 n = 3 时, 所有排列如下：
+    //"123"
+    //"132"
+    //"213"
+    //"231"
+    //"312"
+    //"321"
+    //给定 n 和 k，返回第 k 个排列。
+    public static String getPermutation(int n, int k) {
+        //标记是否使用过
+        boolean [] used = new boolean[n + 1];
+        //阶层数组
+        int[] factorial = new int[n + 1];
+        factorial[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            factorial[i] = i * factorial[i - 1];
+        }
+        StringBuffer sb = new StringBuffer();
+        return getPermutation(sb,used,factorial,n,k).toString();
+    }
+
+    public static StringBuffer getPermutation(StringBuffer sb, boolean[] used,int[] factorial, int n, int k) {
+        //如果n == 1，或者k==1 直接在未使用过的数从小到大添加
+        if (n == 1 || k == 1){
+            for (int i = 1; i < used.length; i++) {
+                if (!used[i]){
+                    sb.append(i);
+                }
+            }
+            return sb;
+        }
+        //变化位
+        int changeBit = 0;
+        //阶层指针
+        int facPoint = 0;
+        //寻找变化位
+        for (int i = 1; i <= n; i++) {
+            if (factorial[i] >= k){
+                changeBit = i;
+                facPoint = i - 1;
+                break;
+            }
+        }
+
+        if (n > changeBit){
+            //n比变化的位数大 说明未使用过的n - changeBit位是不用变的，直接加上去
+            int temp = n - changeBit;
+            for (int i = 1; i < used.length; i++) {
+                if (!used[i]){
+                    sb.append(i);
+                    used[i] = true;
+                    temp --;
+                }
+                if (temp == 0){
+                    break;
+                }
+            }
+            return getPermutation(sb,used,factorial,changeBit,k);
+        }else {
+            //n 小于或等于 变化位,说明当前最高位要变化
+            //寻找当前最高位是未使用过的数当中第几位
+            for (int i = 1; i <= changeBit; i++) {
+                if (i * factorial[facPoint] >= k){
+                    changeBit = i;
+                }
+            }
+            int temp = changeBit;
+            //给当前高位赋值
+            for (int i = 1; i < used.length; i++) {
+                if (!used[i] && --changeBit==0){
+                    sb.append(i);
+                    used[i] = true;
+                    break;
+                }
+            }
+            return getPermutation(sb,used,factorial,n - 1,k - ((temp - 1) * factorial[facPoint]));
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getPermutation(5,10));
+    }
 }
