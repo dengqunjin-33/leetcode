@@ -130,9 +130,9 @@ public class LeetCodeArrays {
         return n + 1;
     }
 
-    public static void main(String[] args) {
-        firstMissingPositive2(new int[]{3,4,-1,1});
-    }
+//    public static void main(String[] args) {
+//        firstMissingPositive2(new int[]{3,4,-1,1});
+//    }
 
     //自己写的  很慢
     //73. 矩阵置零
@@ -359,5 +359,45 @@ public class LeetCodeArrays {
             map.put(pre, map.getOrDefault(pre, 0) + 1);
         }
         return count;
+    }
+
+    //1292. 元素和小于等于阈值的正方形的最大边长
+    //给你一个大小为 m x n 的矩阵 mat 和一个整数阈值 threshold。
+    //请你返回元素总和小于或等于阈值的正方形区域的最大边长；如果没有这样的正方形区域，则返回 0 。
+    public static int maxSideLength(int[][] mat, int threshold) {
+        int res = 0;
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                res = Math.max(res,maxSideLength(mat,i,j,i,j,threshold,0));
+            }
+        }
+        return res;
+    }
+
+    public static int maxSideLength(int[][] mat, int x1, int y1, int x2, int y2, int threshold, int sum) {
+        if (x2 == mat.length || y2 == mat[0].length){
+            return x2 - x1;
+        }
+
+        for (int i = x1; i <= x2; i++) {
+            sum += mat[i][y2];
+            if (sum > threshold){
+                return x2 - x1;
+            }
+        }
+
+        for (int i = y1; i < y2; i++) {
+            sum += mat[x2][i];
+            if (sum > threshold){
+                return x2 - x1;
+            }
+        }
+
+        return maxSideLength(mat,x1,y1,x2 + 1,y2 + 1,threshold,sum);
+    }
+
+    public static void main(String[] args) {
+        //[[1,1,3,2,4,3,2],[1,1,3,2,4,3,2],[1,1,3,2,4,3,2]]
+        maxSideLength(new int[][]{{1,1,3,2,4,3,2},{1,1,3,2,4,3,2},{1,1,3,2,4,3,2}},4);
     }
 }

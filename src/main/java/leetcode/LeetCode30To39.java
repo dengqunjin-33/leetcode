@@ -12,7 +12,6 @@ public class LeetCode30To39 {
         int mid = high >> 1;
         int[] result = {-1, -1};
         //二分查找：for循环查找目标存不存在
-        xx:
         for (; ; ) {
             if (low > high) {
                 return result;
@@ -21,7 +20,7 @@ public class LeetCode30To39 {
                 low = ++mid;
             } else if (target == nums[mid]) {
                 result[0] = result[1] = mid;
-                break xx;
+                break;
             } else {
                 high = --mid;
             }
@@ -79,22 +78,5 @@ public class LeetCode30To39 {
                 return low;
             }
         }
-    }
-
-    //36. 有效的数独
-    public boolean isValidSudoku(char[][] board) {
-        int[] row = new int[81];
-        int[] col = new int[81];
-        int[] box = new int[81];
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (".".equals(board[i][j])) {
-                    row[i * 9 + j] = -1;
-                    col[j * 9 + i] = -1;
-                }
-
-            }
-        }
-        return true;
     }
 }
