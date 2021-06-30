@@ -1,6 +1,5 @@
 package leetcode.JianZhiOffer;
 
-
 import java.util.*;
 
 public class LeetCodeJianZhiOffer {
@@ -356,6 +355,100 @@ public class LeetCodeJianZhiOffer {
         return dum.next;
     }
 
+    //剑指 Offer 34. 二叉树中和为某一值的路径
+    //输入一棵二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从树的根节点开始往下一直到叶节点所经过的节点形成一条路径。
+    public List<List<Integer>> pathSum(TreeNode root, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (null == root){
+            return res;
+        }
+        pathSum(res,new ArrayList<>(),root,target);
+        return res;
+    }
+
+    public void pathSum(List<List<Integer>> res, List<Integer> list,TreeNode node, int target) {
+        int val = node.val;
+        list.add(val);
+        if (null == node.right && null == node.left && 0 == target - val){
+            res.add(new ArrayList<>(list));
+        }
+        if (null != node.right){
+            pathSum(res,list,node.right,target - val);
+        }
+        if (null != node.left){
+            pathSum(res,list,node.left,target - val);
+        }
+        list.remove(list.size() - 1);
+    }
+
+    //剑指 Offer 37. 序列化二叉树
+    //请实现两个函数，分别用来序列化和反序列化二叉树。
+    //你需要设计一个算法来实现二叉树的序列化与反序列化。这里不限定你的序列 / 反序列化算法执行逻辑，
+    //你只需要保证一个二叉树可以被序列化为一个字符串并且将这个字符串反序列化为原始的树结构。
+    //提示：输入输出格式与 LeetCode 目前使用的方式一致，详情请参阅 LeetCode 序列化二叉树的格式。你并非必须采取这种方式，你也可以采用其他的方法解决这个问题。
+    public class Codec {
+        // Encodes a tree to a single string.
+        public String serialize(TreeNode root) {
+            StringBuffer sb = new StringBuffer();
+            sb.append('[');
+            if (null == root){
+                return sb.append(']').toString();
+            }
+            Deque<TreeNode> queue = new LinkedList<>();
+            queue.offer(root);
+            while (!queue.isEmpty()){
+                int size = queue.size();
+                for (int i = 0; i < size; i++) {
+                    TreeNode node = queue.poll();
+                    if (null == node){
+                        sb.append("null,");
+                    }else {
+                        sb.append(node.val).append(',');
+                        queue.offer(node.left);
+                        queue.offer(node.right);
+                    }
+                }
+            }
+            sb.setCharAt(sb.length() - 1,']');
+            return sb.toString();
+        }
+
+        // Decodes your encoded data to tree.
+        public TreeNode deserialize(String data) {
+            if ("[]".equals(data)){
+                return null;
+            }
+            if (data.startsWith("[") && data.endsWith("]")){
+                String subData = data.substring(1, data.length() - 1);
+                String[] dataStr = subData.split(",");
+                TreeNode root = new TreeNode(Integer.parseInt(dataStr[0]));
+                Deque<TreeNode> queue = new LinkedList<>();
+                queue.offer(root);
+                int index = 1;
+                while (!queue.isEmpty()){
+                    int size = queue.size();
+                    for (int i = 0; i < size; i++) {
+                        TreeNode node = queue.pop();
+                        if (index < dataStr.length && !"null".equals(dataStr[index])){
+                            TreeNode left = new TreeNode(Integer.parseInt(dataStr[index]));
+                            node.left = left;
+                            queue.offer(left);
+                        }
+                        ++index;
+                        if (index < dataStr.length && !"null".equals(dataStr[index])){
+                            TreeNode right = new TreeNode(Integer.parseInt(dataStr[index]));
+                            node.right = right;
+                            queue.offer(right);
+                        }
+                        ++index;
+                    }
+                }
+                return root;
+            }
+            return null;
+        }
+    }
+
     //剑指 Offer 38. 字符串的排列
     //输入一个字符串，打印出该字符串中字符的所有排列。
     //你可以以任意顺序返回这个字符串数组，但里面不能有重复元素。
@@ -657,7 +750,7 @@ public class LeetCodeJianZhiOffer {
         return nums.length;
     }
 
-    class TreeNode {
+    static class TreeNode {
         int val;
         TreeNode left;
         TreeNode right;
