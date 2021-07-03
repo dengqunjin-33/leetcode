@@ -1,6 +1,8 @@
 package leetcode.Strings;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class LeetCodeStrings {
 
@@ -64,10 +66,6 @@ public class LeetCodeStrings {
         return res;
     }
 
-    public static void main(String[] args) {
-        longestValidParentheses(")()())");
-    }
-
     //139. 单词拆分
     public static boolean wordBreak(String s, List<String> wordDict) {
         Set<String> wordDictSet = new HashSet(wordDict);
@@ -120,5 +118,84 @@ public class LeetCodeStrings {
         }
 
         return buffer.reverse().toString();
+    }
+
+    //451. 根据字符出现频率排序
+    //给定一个字符串，请将字符串里的字符按照出现的频率降序排列。
+    public static String frequencySort(String s) {
+        Map<Character,StringBuffer> map = new TreeMap();
+        StringBuffer sb = new StringBuffer();
+        char[] chars = s.toCharArray();
+        for (char c : chars) {
+            StringBuffer orDefault = map.getOrDefault(c, new StringBuffer());
+            map.put(c,orDefault.append(c));
+        }
+        List<Map.Entry<Character,StringBuffer>> list = new ArrayList<Map.Entry<Character,StringBuffer>>(map.entrySet());
+
+        //升序排序
+        list.sort((o1, o2) -> o2.getValue().length() - o1.getValue().length());
+        for (int i = 0; i < list.size(); i++) {
+            Map.Entry<Character, StringBuffer> entry = list.get(i);
+            sb.append(entry.getValue());
+        }
+        return sb.toString();
+    }
+
+    //使用数组优化
+    //451. 根据字符出现频率排序
+    //给定一个字符串，请将字符串里的字符按照出现的频率降序排列。
+    public static String frequencySort2(String s) {
+        StringBuffer[] sbs = new StringBuffer[256];
+        char[] chars = s.toCharArray();
+        for (char c : chars) {
+            sbs[c] = null == sbs[c] ? new StringBuffer().append(c) : sbs[c].append(c);
+        }
+        Arrays.sort(sbs, (o1, o2) -> {
+            if (null == o1 && null == o2){
+                return 0;
+            }
+            if (null == o1) {
+                return 1;
+            }
+            if (null == o2){
+                return -1;
+            }
+            return o2.length() - o1.length();
+        });
+        StringBuffer res = new StringBuffer();
+        for (StringBuffer sb : sbs) {
+            if (null == sb) {
+                break;
+            }
+            res.append(sb);
+        }
+        return res.toString();
+    }
+
+    //继续优化代码
+    //451. 根据字符出现频率排序
+    //给定一个字符串，请将字符串里的字符按照出现的频率降序排列。
+    public static String frequencySort3(String s) {
+        StringBuffer[] sbs = new StringBuffer[256];
+        char[] chars = s.toCharArray();
+        for (char c : chars) {
+            sbs[c] = null == sbs[c] ? new StringBuffer().append(c) : sbs[c].append(c);
+        }
+        Set<StringBuffer> set = new TreeSet<>((o1, o2) -> o2.length() > o1.length() ? 1 : -1);
+        for (StringBuffer sb : sbs) {
+            if (null != sb) {
+                set.add(sb);
+            }
+        }
+        Iterator<StringBuffer> iterator = set.iterator();
+        StringBuffer sb = new StringBuffer();
+        while (iterator.hasNext()){
+            sb.append(iterator.next());
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        frequencySort3("eert");
     }
 }
