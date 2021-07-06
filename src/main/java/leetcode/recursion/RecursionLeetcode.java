@@ -141,6 +141,37 @@ public class RecursionLeetcode {
         }
     }
 
+    //40. 组合总和 II
+    //给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+    //candidates 中的每个数字在每个组合中只能使用一次。
+    //说明：
+    //所有数字（包括目标数）都是正整数。
+    //解集不能包含重复的组合。
+    public static List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        Set<List<Integer>> res = new HashSet<>();
+        combinationSum2(res, new ArrayList<>(),candidates,target,0);
+        return new ArrayList<>(res);
+    }
+
+    public static void combinationSum2(Set<List<Integer>> set, List<Integer> list, int[] candidates, int target, int index) {
+        if (target == 0){
+            set.add(new ArrayList<>(list));
+            return;
+        }
+
+        if (target < 0 || index == candidates.length){
+            return;
+        }
+
+        for (int i = index; i < candidates.length; i++) {
+            int temp = candidates[i];
+            list.add(temp);
+            combinationSum2(set,list,candidates,target - temp,i + 1);
+            list.remove(list.size() - 1);
+        }
+    }
+
     //46. 全排列
     //给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。
     public List<List<Integer>> permute(int[] nums) {
@@ -413,9 +444,9 @@ public class RecursionLeetcode {
         return dp[n][neg];
     }
 
-    public static void main(String[] args) {
-        findTargetSumWays(new int[]{1,1,1,1,1},3);
-    }
+//    public static void main(String[] args) {
+//        findTargetSumWays(new int[]{1,1,1,1,1},3);
+//    }
 
     //784. 字母大小写全排列
     //给定一个字符串S，通过将字符串S中的每个字母转变大小写，我们可以获得一个新的字符串。返回所有可能得到的字符串集合。
@@ -468,6 +499,7 @@ public class RecursionLeetcode {
             temp.remove(temp.size() - 1);
         }
     }
+
 
     //967. 连续差相同的数字
     //返回所有长度为 n 且满足其每两个连续位上的数字之间的差的绝对值为 k 的 非负整数 。

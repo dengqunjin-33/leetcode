@@ -325,9 +325,6 @@ public class LeetCodeArrays {
         return flag[i][j] = index;
     }
 
-//    public static void main(String[] args) {
-//        longestIncreasingPath(new int[][]{{9,9,4},{6,6,8},{2,1,1}});
-//    }
 
     //540. 有序数组中的单一元素
     //给定一个只包含整数的有序数组，每个元素都会出现两次，唯有一个数只会出现一次，找出这个数。
@@ -405,8 +402,32 @@ public class LeetCodeArrays {
         return ans;
     }
 
-    public static void main(String[] args) {
-        findErrorNums(new int[]{1,2,2,4});
+    //912. 排序数组
+    //给你一个整数数组 nums，请你将该数组升序排列。
+    public int[] sortArray(int[] nums) {
+        quickNums(nums,0,nums.length - 1);
+        return nums;
+    }
+
+    private void quickNums(int[] nums,int start,int end){
+        if (start < end){
+            int base = nums[start];
+            int i = start;
+            int j = end;
+            while (i < j){
+                while (i < j && base <= nums[j]){
+                    --j;
+                }
+                nums[i] = nums[j];
+                while (i < j && base >= nums[i]){
+                    i++;
+                }
+                nums[j] = nums[i];
+            }
+            nums[i] = base;
+            quickNums(nums, start, i);
+            quickNums(nums, i + 1, end);
+        }
     }
 
     //1292. 元素和小于等于阈值的正方形的最大边长
@@ -444,8 +465,4 @@ public class LeetCodeArrays {
         return maxSideLength(mat,x1,y1,x2 + 1,y2 + 1,threshold,sum);
     }
 
-//    public static void main(String[] args) {
-//        //[[1,1,3,2,4,3,2],[1,1,3,2,4,3,2],[1,1,3,2,4,3,2]]
-//        maxSideLength(new int[][]{{1,1,3,2,4,3,2},{1,1,3,2,4,3,2},{1,1,3,2,4,3,2}},4);
-//    }
 }

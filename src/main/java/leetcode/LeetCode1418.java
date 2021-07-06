@@ -23,7 +23,6 @@ public class LeetCode1418 {
             list.add(fool);
         }
 
-
         foodList.sort(((o1, o2) -> {
             if (o1.equals(o2)){
                 return 0;
@@ -79,7 +78,6 @@ public class LeetCode1418 {
             Map<String,Integer> tempMap = map.computeIfAbsent(tableNumber, k -> new HashMap<>());
             tempMap.put(fool,tempMap.getOrDefault(fool,0) + 1);
         }
-
 
         foodList.sort(((o1, o2) -> {
             if (o1.equals(o2)){

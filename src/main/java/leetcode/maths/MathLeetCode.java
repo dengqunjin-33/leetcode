@@ -420,6 +420,29 @@ public class MathLeetCode {
         return (x * x == num);
     }
 
+    //计数法  妙啊
+    //869. 重新排序得到 2 的幂
+    //给定正整数 N ，我们按任何顺序（包括原始顺序）将数字重新排序，注意其前导数字不能为零。
+    //如果我们可以通过上述方式得到 2 的幂，返回 true；否则，返回 false。
+    public boolean reorderedPowerOf2(int N) {
+        int[] A = count(N);
+        for (int i = 0; i < 31; ++i) {
+            if (Arrays.equals(A, count(1 << i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int[] count(int N) {
+        int[] ans = new int[10];
+        while (N > 0) {
+            ans[N % 10]++;
+            N /= 10;
+        }
+        return ans;
+    }
+
     //1344. 时钟指针的夹角
     //给你两个数 hour 和 minutes 。请你返回在时钟上，由给定时间的时针和分针组成的较小角的角度（60 单位制）。
     public static double angleClock(int hour, int minutes) {
