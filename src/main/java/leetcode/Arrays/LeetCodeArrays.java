@@ -361,6 +361,54 @@ public class LeetCodeArrays {
         return count;
     }
 
+    //645. 错误的集合
+    //集合 s 包含从 1 到 n 的整数。不幸的是，因为数据错误，导致集合里面某一个数字复制了成了集合里面的另外一个数字的值，导致集合 丢失了一个数字 并且 有一个数字重复 。
+    //给定一个数组 nums 代表了集合 S 发生错误后的结果。
+    //请你找出重复出现的整数，再找到丢失的整数，将它们以数组的形式返回。
+    public static int[] findErrorNums(int[] nums) {
+        int n = nums.length;
+        boolean[] cnts = new boolean[n + 1];
+        int sum = nums.length * (nums.length + 1) >> 1;
+        int[] ans = new int[2];
+        for (int x : nums) {
+            if(cnts[x]){
+                ans[0] = x;
+            }else{
+                sum -= x;
+                cnts[x] = true;
+            }
+        }
+        ans[1] = sum;
+        return ans;
+    }
+
+    //645. 错误的集合
+    //集合 s 包含从 1 到 n 的整数。不幸的是，因为数据错误，导致集合里面某一个数字复制了成了集合里面的另外一个数字的值，导致集合 丢失了一个数字 并且 有一个数字重复 。
+    //给定一个数组 nums 代表了集合 S 发生错误后的结果。
+    //请你找出重复出现的整数，再找到丢失的整数，将它们以数组的形式返回。
+    public static int[] findErrorNums2(int[] nums) {
+        int n = nums.length;
+        boolean[] cnts = new boolean[n + 1];
+        int[] ans = new int[2];
+        for (int x : nums) {
+            if(cnts[x]){
+                ans[0] = x;
+            }else{
+                cnts[x] = true;
+            }
+        }
+        for (int i = 1; i < n + 1; i++) {
+            if (!cnts[i]){
+                ans[1] = i;
+            }
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        findErrorNums(new int[]{1,2,2,4});
+    }
+
     //1292. 元素和小于等于阈值的正方形的最大边长
     //给你一个大小为 m x n 的矩阵 mat 和一个整数阈值 threshold。
     //请你返回元素总和小于或等于阈值的正方形区域的最大边长；如果没有这样的正方形区域，则返回 0 。
@@ -396,8 +444,8 @@ public class LeetCodeArrays {
         return maxSideLength(mat,x1,y1,x2 + 1,y2 + 1,threshold,sum);
     }
 
-    public static void main(String[] args) {
-        //[[1,1,3,2,4,3,2],[1,1,3,2,4,3,2],[1,1,3,2,4,3,2]]
-        maxSideLength(new int[][]{{1,1,3,2,4,3,2},{1,1,3,2,4,3,2},{1,1,3,2,4,3,2}},4);
-    }
+//    public static void main(String[] args) {
+//        //[[1,1,3,2,4,3,2],[1,1,3,2,4,3,2],[1,1,3,2,4,3,2]]
+//        maxSideLength(new int[][]{{1,1,3,2,4,3,2},{1,1,3,2,4,3,2},{1,1,3,2,4,3,2}},4);
+//    }
 }

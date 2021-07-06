@@ -195,7 +195,136 @@ public class LeetCodeStrings {
         return sb.toString();
     }
 
+//    public static void main(String[] args) {
+//        frequencySort3("eert");
+//    }
+
+    //726. 原子的数量
+    //给定一个化学式formula（作为字符串），返回每种原子的数量。
+    //原子总是以一个大写字母开始，接着跟随0个或任意个小写字母，表示原子的名字。
+    //如果数量大于 1，原子后会跟着数字表示原子的数量。如果数量等于 1 则不会跟数字。例如，H2O 和 H2O2 是可行的，但 H1O2 这个表达是不可行的。
+    //两个化学式连在一起是新的化学式。例如 H2O2He3Mg4 也是化学式。
+    //一个括号中的化学式和数字（可选择性添加）也是化学式。例如 (H2O2) 和 (H2O2)3 是化学式。
+    //给定一个化学式，输出所有原子的数量。格式为：第一个（按字典序）原子的名子，跟着它的数量（如果数量大于 1），然后是第二个原子的名字（按字典序），跟着它的数量（如果数量大于 1），以此类推。
+    public static String countOfAtoms(String formula) {
+        StringBuffer sb = new StringBuffer().append('(').append(formula).append(')');
+        dealingString(sb);
+        Map<String,Integer> map = new TreeMap<>();
+        int start = 0;
+        xx:for (int i = start; i < sb.length(); i++) {
+            if (sb.charAt(i) >= '0' && sb.charAt(i) <= '9'){
+                for (int j = i; j < sb.length(); j++) {
+                    if (j == sb.length() - 1){
+                        String sub = sb.substring(start, i);
+                        map.put(sub,map.getOrDefault(sub,0) + Integer.parseInt(sb.substring(i,sb.length())));
+                        break xx;
+                    }
+                    if (sb.charAt(j) >= '0' && sb.charAt(j) <= '9'){
+                        continue;
+                    }
+                    else {
+                        String sub = sb.substring(start, i);
+                        map.put(sub,map.getOrDefault(sub,0) + Integer.parseInt(sb.substring(i,j)));
+                        start = j;
+                        i = j - 1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        StringBuffer res = new StringBuffer();
+        for (Map.Entry<String,Integer> entry : map.entrySet()) {
+            res.append(entry.getKey());
+            if (1 < entry.getValue()){
+                res.append(entry.getValue());
+            }
+        }
+        return res.toString();
+    }
+
+    public static void dealingString(StringBuffer sb){
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < sb.length(); i++) {
+            if ('(' == sb.charAt(i)){
+                stack.push(i);
+            }
+            if (')' == sb.charAt(i)){
+                Integer pop = stack.pop();
+                int end = i;
+                if (i == sb.length() - 1){
+                    end = sb.length();
+                }
+                for (int j = i + 1; j < sb.length(); j++) {
+                    if (sb.charAt(j) >= '0' && sb.charAt(j) <= '9'){
+                        end = j;
+                    }else {
+                        end = j;
+                        break;
+                    }
+                }
+
+                int temp = 1;
+                if (end == sb.length() - 1){
+                    try {
+                        temp = Integer.parseInt(sb.substring(i + 1,sb.length()));
+                        end = sb.length();
+                    }catch (Exception ignore){}
+                }
+                if (end - 1 != i){
+                    try {
+                        temp = Integer.parseInt(sb.substring(i + 1,end));
+                    }catch (Exception ignore){}
+                }
+
+                StringBuffer stringBuffer = dealingSb(sb.substring(pop + 1, i), temp);
+                sb.delete(pop,end).insert(pop,stringBuffer);
+                dealingString(sb);
+                return;
+            }
+        }
+    }
+
+    //括号处理
+    public static StringBuffer dealingSb(String data, int k){
+        StringBuffer res = new StringBuffer();
+        Stack<Integer> stack = new Stack<>();
+        int index = 0;
+        boolean flag = false;
+        for (int i = 0; i < data.length(); i++) {
+            if (data.charAt(i) >= '0' && data.charAt(i) <= '9'){
+                if (!flag){
+                    index = i;
+                    flag = true;
+                    Integer pop = stack.pop();
+                    res.append(data, pop, i);
+                }
+            }
+            if (data.charAt(i) >= 'A' && data.charAt(i) <= 'Z'){
+                try {
+                    int count = Integer.parseInt(data.substring(index,i));
+                    res.append(count * k);
+                    flag = false;
+                }catch (Exception ignored){}
+                if (!stack.isEmpty()){
+                    res.append(data,stack.pop(),i).append(k);
+                }
+                stack.push(i);
+            }
+        }
+
+        if (stack.isEmpty()){
+            try {
+                int count = Integer.parseInt(data.substring(index));
+                res.append(count * k);
+            }catch (Exception ignored){}
+        }else {
+            res.append(data, stack.pop(),data.length()).append(k);
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
-        frequencySort3("eert");
+        System.out.println(countOfAtoms("H11He49NO35B7N46Li20"));
     }
 }
