@@ -465,4 +465,66 @@ public class LeetCodeArrays {
         return maxSideLength(mat,x1,y1,x2 + 1,y2 + 1,threshold,sum);
     }
 
+    //暴力法 超时
+    //1711. 大餐计数
+    //大餐 是指 恰好包含两道不同餐品 的一餐，其美味程度之和等于 2 的幂。
+    //你可以搭配 任意 两道餐品做一顿大餐。
+    //给你一个整数数组 deliciousness ，其中 deliciousness[i] 是第 i道餐品的美味程度，返回你可以用数组中的餐品做出的不同 大餐 的数量。结果需要对 109 + 7 取余。
+    //注意，只要餐品下标不同，就可以认为是不同的餐品，即便它们的美味程度相同。
+    public int countPairs(int[] deliciousness) {
+        long count = 0;
+        for (int i = 0; i < deliciousness.length - 1; i++) {
+            for (int j = i + 1; j < deliciousness.length; j++) {
+                long temp = deliciousness[i] + deliciousness[j];
+                if (Long.bitCount(temp) == 1){
+                    ++count;
+                }
+            }
+        }
+        return (int) (count % 1000000007);
+    }
+
+    //优化  使用hash表
+    //1711. 大餐计数
+    //大餐 是指 恰好包含两道不同餐品 的一餐，其美味程度之和等于 2 的幂。
+    //你可以搭配 任意 两道餐品做一顿大餐。
+    //给你一个整数数组 deliciousness ，其中 deliciousness[i] 是第 i道餐品的美味程度，返回你可以用数组中的餐品做出的不同 大餐 的数量。结果需要对 109 + 7 取余。
+    //注意，只要餐品下标不同，就可以认为是不同的餐品，即便它们的美味程度相同。
+    public static int countPairs2(int[] deliciousness) {
+        final int MOD = 1000000007;
+        int maxVal = 0;
+        for (int val : deliciousness) {
+            maxVal = Math.max(maxVal, val);
+        }
+        int maxSum = maxVal * 2;
+        maxSum = tableSizeFor(maxSum);
+        int pairs = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int val : deliciousness) {
+            for (int sum = maxSum; sum > 0; sum >>= 1) {
+                if (sum - val < 0) {
+                    break;
+                }
+                int count = map.getOrDefault(sum - val, 0);
+                pairs = (pairs + count) % MOD;
+            }
+            map.put(val, map.getOrDefault(val, 0) + 1);
+        }
+        return pairs;
+    }
+
+    public static int tableSizeFor(int cap) {
+        int n = cap - 1;
+        n |= n >>> 1;
+        n |= n >>> 2;
+        n |= n >>> 4;
+        n |= n >>> 8;
+        n |= n >>> 16;
+        return (n < 0) ? 1 : n + 1;
+    }
+
+    public static void main(String[] args) {
+        countPairs2(new int[]{1,1,1,3,3,3,7});
+    }
+
 }
