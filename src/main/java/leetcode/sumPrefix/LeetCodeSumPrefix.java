@@ -99,7 +99,75 @@ public class LeetCodeSumPrefix {
         return ans;
     }
 
-    public static void main(String[] args) {
-        numSubarrayProductLessThanK(new int[]{10,9,10,4,3,8,3,3,6,2,10,10,9,3},19);
+    //hashmap前缀和
+    //930. 和相同的二元子数组
+    //给你一个二元数组 nums ，和一个整数 goal ，请你统计并返回有多少个和为 goal 的 非空 子数组。
+    //子数组 是数组的一段连续部分。
+    public int numSubarraysWithSum2(int[] nums, int goal) {
+        int res = 0;
+        if (nums.length < goal){
+            return res;
+        }
+        int sum = 0;
+        HashMap<Integer,Integer> map = new HashMap<>();
+        for (int num : nums) {
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+            if (num == 1){
+                ++sum;
+            }
+            if (sum >= goal){
+                Integer orDefault = map.getOrDefault(sum - goal, 0);
+                res = res + orDefault;
+            }
+        }
+        return res;
+    }
+
+    //优化 使用数组前缀和
+    //930. 和相同的二元子数组
+    //给你一个二元数组 nums ，和一个整数 goal ，请你统计并返回有多少个和为 goal 的 非空 子数组。
+    //子数组 是数组的一段连续部分。
+    public static int numSubarraysWithSum(int[] nums, int goal) {
+        int res = 0;
+        int len = nums.length;
+        if (len < goal){
+            return res;
+        }
+
+        int prefix = 0;
+        int[] temp = new int[len + 1];
+
+        for (int num : nums) {
+            temp[prefix] += 1;
+            if (num == 1) {
+                ++prefix;
+            }
+            if (prefix >= goal) {
+                res += temp[prefix - goal];
+            }
+        }
+
+        return res;
+    }
+
+    //双指针
+    //930. 和相同的二元子数组
+    //给你一个二元数组 nums ，和一个整数 goal ，请你统计并返回有多少个和为 goal 的 非空 子数组。
+    //子数组 是数组的一段连续部分。
+    public int numSubarraysWithSum3(int[] nums, int t) {
+        int n = nums.length;
+        int ans = 0;
+        for (int r = 0, l1 = 0, l2 = 0, s1 = 0, s2 = 0; r < n; r++) {
+            s1 += nums[r];
+            s2 += nums[r];
+            while (l1 <= r && s1 > t) {
+                s1 -= nums[l1++];
+            }
+            while (l2 <= r && s2 >= t) {
+                s2 -= nums[l2++];
+            }
+            ans += l2 - l1;
+        }
+        return ans;
     }
 }
