@@ -452,8 +452,5 @@ public class MathLeetCode {
         return Math.min(c,360 - c);
     }
 
-    public static void main(String[] args) {
-        angleClock(3,15);
-    }
 
 }

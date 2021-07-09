@@ -28,6 +28,155 @@ public class LeetCodeStrings {
         return maxLen;
     }
 
+    //6. Z 字形变换
+    //将一个给定字符串 s 根据给定的行数 numRows ，以从上往下、从左到右进行 Z 字形排列。
+    public String convert(String s, int numRows) {
+        if(numRows == 1 || s.length() <= numRows){
+            return s;
+        }
+        StringBuffer[] list = new StringBuffer[numRows];
+        for (int i = 0; i < numRows; i++) {
+            list[i] = new StringBuffer();
+        }
+
+        char[] chars = s.toCharArray();
+        boolean flag = false;
+        int index = 0;
+        for (char c : chars) {
+            list[index].append(c);
+
+            if (index == 0 || index == numRows - 1){
+                flag = !flag;
+            }
+
+            if (flag){
+                ++index;
+            }else {
+                --index;
+            }
+        }
+
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            res.append(list[i]);
+        }
+        return res.toString();
+    }
+
+    //8. 字符串转换整数 (atoi)
+    //请你来实现一个 myAtoi(string s) 函数，使其能将字符串转换成一个 32 位有符号整数（类似 C/C++ 中的 atoi 函数）。
+    //函数 myAtoi(string s) 的算法如下：
+    //读入字符串并丢弃无用的前导空格
+    //检查下一个字符（假设还未到字符末尾）为正还是负号，读取该字符（如果有）。 确定最终结果是负数还是正数。 如果两者都不存在，则假定结果为正。
+    //读入下一个字符，直到到达下一个非数字字符或到达输入的结尾。字符串的其余部分将被忽略。
+    //将前面步骤读入的这些数字转换为整数（即，"123" -> 123， "0032" -> 32）。如果没有读入数字，则整数为 0 。必要时更改符号（从步骤 2 开始）。
+    //如果整数数超过 32 位有符号整数范围 [−231,  231 − 1] ，需要截断这个整数，使其保持在这个范围内。具体来说，小于 −231 的整数应该被固定为 −231 ，大于 231 − 1 的整数应该被固定为 231 − 1 。
+    //返回整数作为最终结果
+    public static int myAtoi(String s) {
+        char[] chars = s.toCharArray();
+        //判断正负
+        boolean flag = true;
+        //判断是否开始计数
+        boolean count = false;
+        //判断是否是前导空格
+        boolean space = true;
+        int res = 0;
+        for (int index = 0;index < chars.length;index ++) {
+            if (chars[index] == ' ' && space){
+            }else if (chars[index] == '-' && !count) {
+                space = false;
+                flag = false;
+                count = true;
+            }else if (chars[index] == '+' && !count){
+                space = false;
+                count = true;
+            }else {
+                space = false;
+                if (chars[index] == '0'){
+                    count = true;
+                    continue;
+                }
+                if (chars[index] > '0' && chars[index] <= '9'){
+                    int end = index;
+                    for (int i = index + 1; i < chars.length; i++) {
+                        if (chars[i] >= '0' && chars[i] <= '9'){
+                            ++end;
+                        }else {
+                            break;
+                        }
+                    }
+                    if (end - index > 9){
+                        if (flag){
+                            res = Integer.MAX_VALUE;
+                        }else {
+                            res = Integer.MIN_VALUE;
+                        }
+                    }else {
+                        long temp = Long.parseLong(s.substring(index,end + 1));
+                        if (flag){
+                            res = temp > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) temp;
+                        }else {
+                            res = temp > Integer.MAX_VALUE ? Integer.MIN_VALUE : (int) -temp;
+                        }
+                    }
+                    break;
+                }
+                break;
+            }
+        }
+
+        return res;
+    }
+
+    //13. 罗马数字转整数
+    //罗马数字包含以下七种字符: I， V， X， L，C，D 和 M。
+    public static int romanToInt(String s) {
+        String rome = "IVXLCDM";
+        int[] nums = {1,5,10,50,100,500,1000};
+        char[] chars = s.toCharArray();
+        int res = 0;
+        for (int i = 0; i < chars.length - 1; i++) {
+            int prefix = nums[rome.indexOf(chars[i])];
+            int suffix = nums[rome.indexOf(chars[i + 1]) ];
+            if (suffix > prefix){
+                res -= prefix;
+            }else {
+                res += prefix;
+            }
+        }
+        res += nums[rome.indexOf(chars[chars.length - 1])];
+        return res;
+    }
+
+    //14. 最长公共前缀
+    //编写一个函数来查找字符串数组中的最长公共前缀。
+    //如果不存在公共前缀，返回空字符串 ""。
+    public String longestCommonPrefix(String[] strs) {
+        StringBuffer sb = new StringBuffer();
+        if (strs.length == 0){
+            return sb.toString();
+        }
+        if (strs.length == 1){
+            return strs[0];
+        }
+
+        int len = strs.length;
+        int minLen = Integer.MAX_VALUE;
+        for (String str : strs) {
+            minLen = Math.min(str.length(), minLen);
+        }
+        for (int i = 0; i < minLen; i++) {
+            char temp = strs[0].charAt(i);
+            for (int j = 1; j < len; j++) {
+                if (temp != strs[j].charAt(i)){
+                    return sb.toString();
+                }
+            }
+            sb.append(temp);
+        }
+        return sb.toString();
+    }
+
     //32. 最长有效括号
     //给你一个只包含 '(' 和 ')' 的字符串，找出最长有效（格式正确且连续）括号子串的长度。
     public static int longestValidParentheses(String s) {
