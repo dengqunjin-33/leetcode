@@ -265,6 +265,82 @@ public class LeetCodeStrings {
         return dp[s.length()];
     }
 
+    //150. 逆波兰表达式求值
+    //执行用时：5 ms, 在所有 Java 提交中击败了94.63%的用户
+    //内存消耗：38.3 MB, 在所有 Java 提交中击败了20.58%
+    //的用户
+    //根据 逆波兰表示法，求表达式的值。
+    //有效的算符包括 +、-、*、/ 。每个运算对象可以是整数，也可以是另一个逆波兰表达式。
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack  = new Stack<>();
+        for (String s : tokens) {
+            switch (s){
+                case "+":
+                    Integer first = stack.pop();
+                    Integer second = stack.pop();
+                    stack.push(second + first);
+                    break;
+                case "-":
+                    first = stack.pop();
+                    second = stack.pop();
+                    stack.push(second - first);
+                    break;
+                case "*":
+                    first = stack.pop();
+                    second = stack.pop();
+                    stack.push(second * first);
+                    break;
+                case "/":
+                    first = stack.pop();
+                    second = stack.pop();
+                    stack.push(second / first);
+                    break;
+                default:
+                    stack.push(Integer.parseInt(s));
+            }
+        }
+        return stack.peek();
+    }
+
+    //151. 翻转字符串里的单词
+    //栈操作 执行用时：
+    //6 ms, 在所有 Java 提交中击败了77.72%的用户
+    //内存消耗：39.2 MB, 在所有 Java 提交中击败了5.04%的用户
+    //给你一个字符串 s ，逐个翻转字符串中的所有 单词 。
+    //单词 是由非空格字符组成的字符串。s 中使用至少一个空格将字符串中的 单词 分隔开。
+    //请你返回一个翻转 s 中单词顺序并用单个空格相连的字符串。
+    //说明：
+    //输入字符串 s 可以在前面、后面或者单词间包含多余的空格。
+    //翻转后单词间应当仅用一个空格分隔。
+    //翻转后的字符串中不应包含额外的空格。
+    public String reverseWords(String s) {
+        Stack<Character> stack = new Stack<>();
+        StringBuffer sb = new StringBuffer();
+        char[] chars = s.toCharArray();
+        for (int i = chars.length - 1; i >= 0; i--) {
+            if (chars[i] == ' '){
+                stackPop(stack,sb);
+            }else {
+                stack.push(chars[i]);
+            }
+        }
+
+        stackPop(stack,sb);
+        return sb.toString();
+    }
+
+    private void stackPop(Stack<Character> stack,StringBuffer sb){
+        if (!stack.isEmpty()){
+            if (0 != sb.length()){
+                sb.append(' ');
+            }
+            sb.append(' ');
+            while (!stack.isEmpty()){
+                sb.append(stack.pop());
+            }
+        }
+    }
+
     //402. 移掉K位数字
     //给定一个以字符串表示的非负整数 num，移除这个数中的 k 位数字，使得剩下的数字最小。
     //注意:

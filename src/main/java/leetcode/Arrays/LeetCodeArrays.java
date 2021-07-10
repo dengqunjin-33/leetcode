@@ -250,6 +250,8 @@ public class LeetCodeArrays {
         sortQuick(arr,i + 1, end);
     }
 
+
+
     //自己写的 超时了
     //327. 区间和的个数
     //给你一个整数数组 nums 以及两个整数 lower 和 upper 。求数组中，值位于范围 [lower, upper] （包含 lower 和 upper）之内的 区间和的个数 。

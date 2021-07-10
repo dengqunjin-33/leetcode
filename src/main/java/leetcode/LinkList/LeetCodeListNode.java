@@ -503,6 +503,57 @@ public class LeetCodeListNode {
         list.get(left).next = null;
     }
 
+
+    //使用冒泡排序
+    //执行用时：2671 ms, 在所有 Java 提交中击败了5.00%的用户
+    //内存消耗：42.2 MB, 在所有 Java 提交中击败了99.98%
+    //的用户
+    //148. 排序链表
+    //给你链表的头结点 head ，请将其按 升序 排列并返回 排序后的链表 。
+    public ListNode sortList(ListNode head) {
+        if (null == head){
+            return head;
+        }
+        ListNode cur = head;
+        while (null != cur){
+            ListNode temp = cur.next;
+            while (null != temp){
+                if (cur.val > temp.val){
+                    int tempVal = temp.val;
+                    temp.val = cur.val;
+                    cur.val = tempVal;
+                }
+                temp = temp.next;
+            }
+            cur = cur.next;
+        }
+        return head;
+    }
+
+    //使用TreeSet 优化
+    //执行用时：20 ms, 在所有 Java 提交中击败了12.99%的用户
+    //内存消耗：49.3 MB, 在所有 Java 提交中击败了5.05%的用户
+    //148. 排序链表
+    //给你链表的头结点 head ，请将其按 升序 排列并返回 排序后的链表 。
+    public ListNode sortList2(ListNode head) {
+        if (null == head){
+            return head;
+        }
+        Set<Integer> set = new TreeSet<>((o1, o2)-> o1 > o2 ? 1 : -1);
+        while (null != head){
+            set.add(head.val);
+            head = head.next;
+        }
+        Iterator<Integer> iterator = set.iterator();
+        ListNode res = new ListNode(-1);
+        ListNode temp = res;
+        while (iterator.hasNext()){
+            temp.next = new ListNode(iterator.next());
+            temp = temp.next;
+        }
+        return res.next;
+    }
+
     //160. 相交链表
     //给你两个单链表的头节点 headA 和 headB ，请你找出并返回两个单链表相交的起始节点。如果两个链表没有交点，返回 null 。
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
