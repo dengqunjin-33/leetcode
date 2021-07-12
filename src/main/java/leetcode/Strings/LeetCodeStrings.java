@@ -1,8 +1,6 @@
 package leetcode.Strings;
 
 import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class LeetCodeStrings {
 
@@ -213,6 +211,81 @@ public class LeetCodeStrings {
             }
         }
         return res;
+    }
+
+    //执行用时：
+    //25 ms, 在所有 Java 提交中击败了19.08%的用户
+    //内存消耗：38.8 MB, 在所有 Java 提交中击败了30.95%的用户
+    //43. 字符串相乘
+    //给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。
+    public static String multiply(String num1, String num2) {
+        if ("0".equals(num1) || "0".equals(num2)){
+            return String.valueOf(0);
+        }
+
+        int[][] tableMul = {
+                {0,0,0,0,0,0,0,0,0,0},
+                {0,1,2,3,4,5,6,7,8,9},
+                {0,2,4,6,8,10,12,14,16,18},
+                {0,3,6,9,12,15,18,21,24,27},
+                {0,4,8,12,16,20,24,28,32,36},
+                {0,5,10,15,20,25,30,35,40,45},
+                {0,6,12,18,24,30,36,42,48,54},
+                {0,7,14,21,28,35,42,49,56,63},
+                {0,8,16,24,32,40,48,56,64,72},
+                {0,9,18,27,36,45,54,63,72,81}};
+
+        char[] chars1 = num1.toCharArray();
+        char[] chars2 = num2.toCharArray();
+        int c1Len = chars1.length;
+        int c2Len = chars2.length;
+
+        StringBuffer res = new StringBuffer();
+
+        for (int i = c1Len - 1; i >= 0; i--) {
+            StringBuffer sb = new StringBuffer();
+            for (int j = c1Len - 1 - i; j > 0; j--) {
+                sb.append('0');
+            }
+            byte temp = 0;
+            for (int j = c2Len - 1; j >= 0; j--) {
+                temp += tableMul[chars1[i] - '0'][chars2[j] - '0'];
+                sb.append(temp % 10);
+                temp /= 10;
+            }
+            while (0 != temp){
+                sb.append(temp % 10);
+                temp /= 10;
+            }
+
+
+            int resLen = res.length();
+            int sbLen = sb.length();
+            int maxLen = Math.max(res.length(),sb.length());
+            for (int j = 0; j < maxLen; j++) {
+                int tempResNum = j < resLen ? res.charAt(j) - '0' : 0;
+                int sbNum = j < sbLen ? sb.charAt(j) - '0' : 0;
+                temp += tempResNum + sbNum;
+                int appendNum = temp % 10;
+                if (j < resLen ){
+                    res.replace(j,j + 1,String.valueOf(appendNum));
+                }else {
+                    res.append(appendNum);
+                }
+
+                temp /= 10;
+            }
+
+            while (0 != temp){
+                res.append(temp % 10);
+                temp /= 10;
+            }
+        }
+        return res.reverse().toString();
+    }
+
+    public static void main(String[] args) {
+        multiply("98","8");
     }
 
     //97. 交错字符串

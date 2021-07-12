@@ -88,6 +88,21 @@ public class LeetCodeArrays {
         return ans;
     }
 
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：37.6 MB, 在所有 Java 提交中击败了90.32%的用户
+    //33. 搜索旋转排序数组
+    //整数数组 nums 按升序排列，数组中的值 互不相同 。
+    //在传递给函数之前，nums 在预先未知的某个下标 k（0 <= k < nums.length）上进行了 旋转，使数组变为 [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]]（下标 从 0 开始 计数）。例如， [0,1,2,4,5,6,7] 在下标 3 处经旋转后可能变为 [4,5,6,7,0,1,2] 。
+    //给你 旋转后 的数组 nums 和一个整数 target ，如果 nums 中存在这个目标值 target ，则返回它的下标，否则返回 -1 。
+    public int search(int[] nums, int target) {
+        for(int i = 0;i < nums.length; i++){
+            if (target == nums[i]){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     //我自己的
     //41. 缺失的第一个正数
     //给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
@@ -250,6 +265,25 @@ public class LeetCodeArrays {
         sortQuick(arr,i + 1, end);
     }
 
+    //执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：49.2 MB, 在所有 Java 提交中击败了36.99%的用户
+    //238. 除自身以外数组的乘积
+    //给你一个长度为 n 的整数数组 nums，其中 n > 1，返回输出数组 output ，其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。
+    public int[] productExceptSelf(int[] nums) {
+        int[] res = new int[nums.length];
+        int k = 1;
+        for(int i = 0; i < res.length; i++){
+            res[i] = k;
+            k = k * nums[i]; // 此时数组存储的是除去当前元素左边的元素乘积
+        }
+        k = 1;
+        for(int i = res.length - 1; i >= 0; i--){
+            res[i] *= k; // k为该数右边的乘积。
+            k *= nums[i]; // 此时数组等于左边的 * 该数右边的。
+        }
+        return res;
+    }
+
     //排序 + 二分法
     //执行用时：1 ms, 在所有 Java 提交中击败了85.63%的用户
     //内存消耗：36.2 MB, 在所有 Java 提交中击败了73.31%的用户
@@ -389,10 +423,6 @@ public class LeetCodeArrays {
         }
     }
 
-    public static void main(String[] args) {
-        gameOfLife(new int[][]{{0,1,0},{0,0,1},{1,1,1},{0,0,0}});
-    }
-
     //自己写的 超时了
     //327. 区间和的个数
     //给你一个整数数组 nums 以及两个整数 lower 和 upper 。求数组中，值位于范围 [lower, upper] （包含 lower 和 upper）之内的 区间和的个数 。
@@ -468,7 +498,6 @@ public class LeetCodeArrays {
         return flag[i][j] = index;
     }
 
-
     //540. 有序数组中的单一元素
     //给定一个只包含整数的有序数组，每个元素都会出现两次，唯有一个数只会出现一次，找出这个数。
     public int singleNonDuplicate(int[] nums) {
@@ -543,6 +572,42 @@ public class LeetCodeArrays {
             }
         }
         return ans;
+    }
+
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：38.7 MB, 在所有 Java 提交中击败了38.27%的用户
+    //832. 翻转图像
+    //给定一个二进制矩阵 A，我们想先水平翻转图像，然后反转图像并返回结果。
+    //水平翻转图片就是将图片的每一行都进行翻转，即逆序。例如，水平翻转 [1, 1, 0] 的结果是 [0, 1, 1]。
+    //反转图片的意思是图片中的 0 全部被 1 替换， 1 全部被 0 替换。例如，反转 [0, 1, 1] 的结果是 [1, 0, 0]。
+    public int[][] flipAndInvertImage(int[][] image) {
+        int row = image.length;
+        int col = image[0].length;
+        int[][] res = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (image[i][col - 1 - j] == 0){
+                    res[i][j] = 1;
+                }
+            }
+        }
+        return res;
+    }
+
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：35.6 MB, 在所有 Java 提交中击败了67.72%的用户
+    //836. 矩形重叠
+    //矩形以列表 [x1, y1, x2, y2] 的形式表示，其中 (x1, y1) 为左下角的坐标，(x2, y2) 是右上角的坐标。矩形的上下边平行于 x 轴，左右边平行于 y 轴。
+    //如果相交的面积为 正 ，则称两矩形重叠。需要明确的是，只在角或边接触的两个矩形不构成重叠。
+    //给出两个矩形 rec1 和 rec2 。如果它们重叠，返回 true；否则，返回 false 。
+    public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
+        if (rec1[0] == rec1[2] || rec1[1] == rec1[3] || rec2[0] == rec2[2] || rec2[1] == rec2[3]) {
+            return false;
+        }
+        return !(rec1[2] <= rec2[0] ||
+                rec1[3] <= rec2[1] ||
+                rec1[0] >= rec2[2] ||
+                rec1[1] >= rec2[3]);
     }
 
     //912. 排序数组
