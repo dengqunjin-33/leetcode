@@ -250,7 +250,148 @@ public class LeetCodeArrays {
         sortQuick(arr,i + 1, end);
     }
 
+    //排序 + 二分法
+    //执行用时：1 ms, 在所有 Java 提交中击败了85.63%的用户
+    //内存消耗：36.2 MB, 在所有 Java 提交中击败了73.31%的用户
+    //274. H 指数 I
+    //给定一位研究者论文被引用次数的数组（被引用次数是非负整数）。编写一个方法，计算出研究者的 h 指数。
+    //h 指数的定义：h 代表“高引用次数”（high citations），一名科研人员的 h 指数是指他（她）的 （N 篇论文中）总共有 h 篇论文分别被引用了至少 h 次。且其余的 N - h 篇论文每篇被引用次数 不超过 h 次。
+    //例如：某人的 h 指数是 20，这表示他已发表的论文中，每篇被引用了至少 20 次的论文总共有 20 篇。
+    public int hIndexI1(int[] citations) {
+        Arrays.sort(citations);
+        int N = citations.length;
+        int left = 0;
+        int right = N - 1;
+        while (left <= right){
+            int mid = left + right >> 1;
+            if (citations[mid] >= N - mid) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return N - left;
+    }
 
+    //直接二分法 优化
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：36.3 MB, 在所有 Java 提交中击败了50.76%的用户
+    //274. H 指数 I
+    //给定一位研究者论文被引用次数的数组（被引用次数是非负整数）。编写一个方法，计算出研究者的 h 指数。
+    //h 指数的定义：h 代表“高引用次数”（high citations），一名科研人员的 h 指数是指他（她）的 （N 篇论文中）总共有 h 篇论文分别被引用了至少 h 次。且其余的 N - h 篇论文每篇被引用次数 不超过 h 次。
+    //例如：某人的 h 指数是 20，这表示他已发表的论文中，每篇被引用了至少 20 次的论文总共有 20 篇。
+    public int hIndexI2(int[] citations) {
+        int n = citations.length;
+        int l = 0, r = n;
+        while (l < r) {
+            int mid = l + r + 1 >> 1;
+            if (check(citations, mid)) {
+                l = mid;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return r;
+    }
+
+    private boolean check(int[] citations, int mid) {
+        int ans = 0;
+        for (int i : citations) {
+            if (i >= mid && ++ans >= mid) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //275. H 指数 II
+    //给定一位研究者论文被引用次数的数组（被引用次数是非负整数），数组已经按照 升序排列 。编写一个方法，计算出研究者的 h 指数。
+    //h 指数的定义: “h 代表“高引用次数”（high citations），一名科研人员的 h 指数是指他（她）的 （N 篇论文中）总共有 h 篇论文分别被引用了至少 h 次。（其余的 N - h 篇论文每篇被引用次数不多于 h 次。）"
+    public int hIndex(int[] citations) {
+        int N = citations.length;
+        int left = 0;
+        int right = N - 1;
+        while (left <= right){
+            int mid = left + right >> 1;
+            if (citations[mid] >= N - mid) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return N - left;
+    }
+
+    //287. 寻找重复数
+    //执行用时：1 ms, 在所有 Java 提交中击败了92.60%的用户
+    //内存消耗：55.1 MB, 在所有 Java 提交中击败了29.68%的用户
+    //给定一个包含 n + 1 个整数的数组 nums ，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。
+    //假设 nums 只有 一个重复的整数 ，找出 这个重复的数 。
+    //你设计的解决方案必须不修改数组 nums 且只用常量级 O(1) 的额外空间。
+    public int findDuplicate(int[] nums) {
+        boolean[] flag = new boolean[nums.length + 1];
+        for (int num : nums) {
+            if (flag[num]) {
+                return num;
+            } else {
+                flag[num] = true;
+            }
+        }
+        return -1;
+    }
+
+    //执行用时：
+    //0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：36.8 MB, 在所有 Java 提交中击败了33.99%的用户
+    //289. 生命游戏
+    //根据 百度百科 ，生命游戏，简称为生命，是英国数学家约翰·何顿·康威在 1970 年发明的细胞自动机。
+    //给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞都具有一个初始状态：1 即为活细胞（live），或 0 即为死细胞（dead）。每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：
+    //如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡；
+    //如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活；
+    //如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡；
+    //如果死细胞周围正好有三个活细胞，则该位置死细胞复活；
+    //下一个状态是通过将上述规则同时应用于当前状态下的每个细胞所形成的，其中细胞的出生和死亡是同时发生的。给你 m x n 网格面板 board 的当前状态，返回下一个状态。
+    public static void gameOfLife(int[][] board) {
+        boolean[][] flag = new boolean[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int tempSum = sumSell(board,i - 1,j -1)
+                        + sumSell(board,i - 1,j)
+                        + sumSell(board,i - 1, j + 1)
+                        + sumSell(board,i, j + 1)
+                        + sumSell(board,i, j - 1)
+                        + sumSell(board,i + 1, j + 1)
+                        + sumSell(board,i + 1, j )
+                        + sumSell(board,i + 1, j - 1);
+                if (board[i][j] == 1){
+                    flag[i][j] = tempSum == 2 || tempSum == 3;
+                }else {
+                    flag[i][j] = tempSum == 3;
+                }
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = flag[i][j] ? 1 : 0;
+            }
+        }
+    }
+
+    private static int sumSell(int[][] board, int i, int j) {
+        if (i < 0
+                || i == board.length
+                || j < 0
+                || j == board[0].length
+                || board[i][j] == 0){
+            return 0;
+        }else {
+            return 1;
+        }
+    }
+
+    public static void main(String[] args) {
+        gameOfLife(new int[][]{{0,1,0},{0,0,1},{1,1,1},{0,0,0}});
+    }
 
     //自己写的 超时了
     //327. 区间和的个数
@@ -525,8 +666,5 @@ public class LeetCodeArrays {
         return (n < 0) ? 1 : n + 1;
     }
 
-    public static void main(String[] args) {
-        countPairs2(new int[]{1,1,1,3,3,3,7});
-    }
 
 }
