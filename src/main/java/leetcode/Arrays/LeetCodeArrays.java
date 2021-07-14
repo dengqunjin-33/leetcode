@@ -786,5 +786,114 @@ public class LeetCodeArrays {
         return (n < 0) ? 1 : n + 1;
     }
 
+    //二分法
+    //执行用时：47 ms, 在所有 Java 提交中击败了88.87%的用户
+    //内存消耗：55.9 MB, 在所有 Java 提交中击败了56.62%的用户
+    //1818. 绝对差值和
+    //给你两个正整数数组 nums1 和 nums2 ，数组的长度都是 n 。
+    //数组 nums1 和 nums2 的 绝对差值和 定义为所有 |nums1[i] - nums2[i]|（0 <= i < n）的 总和（下标从 0 开始）。
+    //你可以选用 nums1 中的 任意一个 元素来替换 nums1 中的 至多 一个元素，以 最小化 绝对差值和。
+    //在替换数组 nums1 中最多一个元素 之后 ，返回最小绝对差值和。因为答案可能很大，所以需要对 109 + 7 取余 后返回。
+    //|x| 定义为：
+    //如果 x >= 0 ，值为 x ，或者
+    //如果 x <= 0 ，值为 -x
+    public static int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+        int n =nums1.length;
+        if (1 == n){
+            return Math.abs(nums1[0] - nums2[0]);
+        }
+
+        int[] sortNum1 = Arrays.copyOf(nums1, n);
+        Arrays.sort(sortNum1);
+
+        //计算能减去的最大差值
+        int maxDiff = 0;
+        int sum = 0;
+        int MOD = 1000000007;
+        for (int i = 0; i < n; i++) {
+            int diff = Math.abs(nums1[i] - nums2[i]);
+
+            sum += diff;
+            sum %= MOD;
+
+            int nearDiff = Integer.MAX_VALUE;
+            int left = 0, right = n - 1;
+            while (left <= right) {
+                int mid = (left + right) >> 1;
+                if (sortNum1[mid] < nums2[i]) {
+                    nearDiff = Math.min( nearDiff,nums2[i] - sortNum1[mid]);
+                    left = mid + 1;
+                } else if (sortNum1[mid] > nums2[i]) {
+                    nearDiff = Math.min(nearDiff,sortNum1[mid] - nums2[i]);
+                    right = mid - 1;
+                }else {
+                    nearDiff = 0;
+                    break;
+                }
+            }
+
+            if (nearDiff < diff) {
+                nearDiff %= MOD;
+                maxDiff =  Math.max(maxDiff, diff - nearDiff);
+            }
+        }
+
+        return (sum + MOD - maxDiff) % MOD;
+    }
+
+    //TreeSet
+    //执行用时：156 ms, 在所有 Java 提交中击败了29.29%的用户
+    //内存消耗：52.6 MB, 在所有 Java 提交中击败了90.34%的用户
+    //1818. 绝对差值和
+    //给你两个正整数数组 nums1 和 nums2 ，数组的长度都是 n 。
+    //数组 nums1 和 nums2 的 绝对差值和 定义为所有 |nums1[i] - nums2[i]|（0 <= i < n）的 总和（下标从 0 开始）。
+    //你可以选用 nums1 中的 任意一个 元素来替换 nums1 中的 至多 一个元素，以 最小化 绝对差值和。
+    //在替换数组 nums1 中最多一个元素 之后 ，返回最小绝对差值和。因为答案可能很大，所以需要对 109 + 7 取余 后返回。
+    //|x| 定义为：
+    //如果 x >= 0 ，值为 x ，或者
+    //如果 x <= 0 ，值为 -x
+    public static int minAbsoluteSumDiff2(int[] nums1, int[] nums2) {
+        int n =nums1.length;
+        if (1 == n){
+            return Math.abs(nums1[0] - nums2[0]);
+        }
+
+        TreeSet<Integer> set = new TreeSet<>();
+        for (int k : nums1) {
+            set.add(k);
+        }
+
+        //计算能减去的最大差值
+        int maxDiff = 0;
+        int sum = 0;
+        int MOD = 1000000007;
+        for (int i = 0; i < n; i++) {
+            int diff = Math.abs(nums1[i] - nums2[i]);
+
+            sum += diff;
+            sum %= MOD;
+
+            int nearDiff = Integer.MAX_VALUE;
+            for (int j = nums2[i]; j <= nums2[i] + diff; j++) {
+                if (set.contains(j)){
+                    nearDiff = j - nums2[i];
+                    break;
+                }
+            }
+
+            for (int j = nums2[i]; j > nums2[i] - Math.min(nearDiff, diff); j--) {
+                if (set.contains(j)){
+                    nearDiff = nums2[i] - j;
+                    break;
+                }
+            }
+
+            if (nearDiff < diff) {
+                maxDiff =  Math.max(maxDiff, diff - nearDiff);
+            }
+        }
+
+        return (sum + 1000000007 - maxDiff) % 1000000007;
+    }
 
 }
