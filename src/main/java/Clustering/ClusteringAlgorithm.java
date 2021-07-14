@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 public class ClusteringAlgorithm {
 
+
     /**
      * @param data      数据源
      * @param k         k个聚类中心点
