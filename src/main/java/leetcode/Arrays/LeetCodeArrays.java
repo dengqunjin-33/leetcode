@@ -339,6 +339,54 @@ public class LeetCodeArrays {
         return res;
     }
 
+    //使用list
+    //执行用时：
+    //348 ms, 在所有 Java 提交中击败了9.65%的用户
+    //内存消耗：38.7 MB, 在所有 Java 提交中击败了29.40%的用户
+    //260. 只出现一次的数字 III
+    //给定一个整数数组 nums，其中恰好有两个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那两个元素。你可以按 任意顺序 返回答案。
+    //进阶：你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？
+    public int[] singleNumber(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for(int num : nums){
+            if (!list.contains(num)){
+                list.add(num);
+            }else {
+                list.remove(Integer.valueOf(num));
+            }
+        }
+        int [] res = new int[2];
+        res[0] = list.get(0);
+        res[1] = list.get(1);
+        return res;
+    }
+
+    //使用异或位运算
+    //执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：38.6 MB, 在所有 Java 提交中击败了47.00%的用户
+    //260. 只出现一次的数字 III
+    //给定一个整数数组 nums，其中恰好有两个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那两个元素。你可以按 任意顺序 返回答案。
+    //进阶：你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？
+    public int[] singleNumber2(int[] nums) {
+        int ret = 0;
+        for (int n : nums) {
+            ret ^= n;
+        }
+        int div = 1;
+        while ((div & ret) == 0) {
+            div <<= 1;
+        }
+        int a = 0, b = 0;
+        for (int n : nums) {
+            if ((div & n) != 0) {
+                a ^= n;
+            } else {
+                b ^= n;
+            }
+        }
+        return new int[]{a, b};
+    }
+
     //排序 + 二分法
     //执行用时：1 ms, 在所有 Java 提交中击败了85.63%的用户
     //内存消耗：36.2 MB, 在所有 Java 提交中击败了73.31%的用户
@@ -896,4 +944,25 @@ public class LeetCodeArrays {
         return (sum + 1000000007 - maxDiff) % 1000000007;
     }
 
+    //执行用时：
+    //3 ms, 在所有 Java 提交中击败了99.35%的用户
+    //内存消耗：55.2 MB, 在所有 Java 提交中击败了82.88%的用户
+    //1846. 减小和重新排列数组后的最大元素
+    //给你一个正整数数组 arr 。请你对 arr 执行一些操作（也可以不进行任何操作），使得数组满足以下条件：
+    //arr 中 第一个 元素必须为 1 。
+    //任意相邻两个元素的差的绝对值 小于等于 1 ，也就是说，对于任意的 1 <= i < arr.length （数组下标从 0 开始），都满足 abs(arr[i] - arr[i - 1]) <= 1 。abs(x) 为 x 的绝对值。
+    //你可以执行以下 2 种操作任意次：
+    //减小 arr 中任意元素的值，使其变为一个 更小的正整数 。
+    //重新排列 arr 中的元素，你可以以任意顺序重新排列。
+    //请你返回执行以上操作后，在满足前文所述的条件下，arr 中可能的 最大值 。
+    public int maximumElementAfterDecrementingAndRearranging(int[] arr) {
+        Arrays.sort(arr);
+        int index = 1;
+        for (int j : arr) {
+            if (j > index){
+                ++index;
+            }
+        }
+        return index - 1;
+    }
 }
