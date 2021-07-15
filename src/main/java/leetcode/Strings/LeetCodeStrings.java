@@ -407,7 +407,6 @@ public class LeetCodeStrings {
             if (0 != sb.length()){
                 sb.append(' ');
             }
-            sb.append(' ');
             while (!stack.isEmpty()){
                 sb.append(stack.pop());
             }
@@ -466,8 +465,7 @@ public class LeetCodeStrings {
 
         //升序排序
         list.sort((o1, o2) -> o2.getValue().length() - o1.getValue().length());
-        for (int i = 0; i < list.size(); i++) {
-            Map.Entry<Character, StringBuffer> entry = list.get(i);
+        for (Map.Entry<Character, StringBuffer> entry : list) {
             sb.append(entry.getValue());
         }
         return sb.toString();
@@ -494,7 +492,7 @@ public class LeetCodeStrings {
             }
             return o2.length() - o1.length();
         });
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
         for (StringBuffer sb : sbs) {
             if (null == sb) {
                 break;
@@ -520,7 +518,7 @@ public class LeetCodeStrings {
             }
         }
         Iterator<StringBuffer> iterator = set.iterator();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while (iterator.hasNext()){
             sb.append(iterator.next());
         }
