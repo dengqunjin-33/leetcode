@@ -1,6 +1,7 @@
 package leetcode.Arrays;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LeetCodeArrays {
 
@@ -601,6 +602,128 @@ public class LeetCodeArrays {
         return flag[i][j] = index;
     }
 
+    //执行用时：2 ms, 在所有 Java 提交中击败了98.34%的用户
+    //内存消耗：40.7 MB, 在所有 Java 提交中击败了23.34%的用户
+    //498. 对角线遍历
+    //给定一个含有 M x N 个元素的矩阵（M 行，N 列），请以对角线遍历的顺序返回这个矩阵中的所有元素，对角线遍历如下图所示。
+    public int[] findDiagonalOrder(int[][] mat) {
+        int row = mat.length;
+        int col = mat[0].length;
+        int[] res = new int[row * col];
+        int power = row + col - 1;
+        int index = 0;
+        for (int i = 0; i < power; i++) {
+            if (i % 2 == 0){
+                int x;
+                if (i < row){
+                    x = i;
+                }else {
+                    x = row - 1;
+                }
+                int y = i - x;
+                while (x >= 0 && x < row && y >=0 && y < col){
+                    res[index] = mat[x][y];
+                    ++index;
+                    --x;
+                    ++y;
+                }
+            }else {
+                int y;
+                if (i < col){
+                    y = i;
+                }else {
+                    y = col - 1;
+                }
+                int x = i - y;
+                while (x >= 0 && x < row && y >=0 && y < col){
+                    res[index] = mat[x][y];
+                    ++index;
+                    ++x;
+                    --y;
+                }
+            }
+        }
+        return res;
+    }
+
+    //两次单调栈
+    //执行用时：5 ms, 在所有 Java 提交中击败了97.89%的用户
+    //内存消耗：40.4 MB, 在所有 Java 提交中击败了21.56%的用户
+    //503. 下一个更大元素 II
+    //给定一个循环数组（最后一个元素的下一个元素是数组的第一个元素），输出每个元素的下一个更大元素。
+    //数字 x 的下一个更大的元素是按数组遍历顺序，这个数字之后的第一个比它更大的数，这意味着你应该循环地搜索它的下一个更大的数。如果不存在，则输出 -1。
+    public int[] nextGreaterElements(int[] nums) {
+        int n = nums.length;
+        int[] ret = new int[n];
+        Arrays.fill(ret, -1);
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
+                ret[stack.pop()] = nums[i];
+            }
+            stack.push(i);
+        }
+        for (int num : nums) {
+            while (!stack.isEmpty() && nums[stack.peek()] < num) {
+                ret[stack.pop()] = num;
+            }
+            if (1 == stack.size()) {
+                break;
+            }
+        }
+        return ret;
+    }
+
+    //使用流运算
+    //执行用时：16 ms, 在所有 Java 提交中击败了20.00%的用户
+    //内存消耗：40.2 MB, 在所有 Java 提交中击败了10.10%的用户
+    //539. 最小时间差
+    //给定一个 24 小时制（小时:分钟 "HH:MM"）的时间列表，找出列表中任意两个时间的最小时间差并以分钟数表示。
+    public int findMinDifference(List<String> timePoints) {
+        int len = timePoints.size();
+        Integer[] times = timePoints.stream()
+                .map(key -> Integer.parseInt(key.substring(0, 2)) * 60 + Integer.parseInt(key.substring(3)))
+                .sorted()
+                .toArray(Integer[]::new);
+        int min = times[0] + 24 * 60 - times[len - 1];
+        for (int i = 1; i < len; i++) {
+            if (times[i].equals(times[i - 1])) {
+                min = 0;
+                break;
+            } else {
+                min = Math.min(times[i] - times[i - 1], min);
+
+            }
+        }
+        return min;
+    }
+
+    //自己转换 快了6ms
+    //执行用时：10 ms, 在所有 Java 提交中击败了32.26%的用户
+    //内存消耗：38.3 MB, 在所有 Java 提交中击败了55.27%的用户
+    //539. 最小时间差
+    //给定一个 24 小时制（小时:分钟 "HH:MM"）的时间列表，找出列表中任意两个时间的最小时间差并以分钟数表示。
+    public int findMinDifference2(List<String> timePoints) {
+        int len = timePoints.size();
+        Collections.sort(timePoints);
+        int min = parseInt(timePoints.get(0))  + 1440 - parseInt(timePoints.get(len - 1));
+        for (int i = 1; i < len; i++) {
+            if (timePoints.get(i).equals(timePoints.get(i - 1))){
+                min = 0;
+                break;
+            }else {
+                int temp = parseInt(timePoints.get(i)) - parseInt(timePoints.get(i - 1));
+                min = Math.min(temp,min);
+            }
+        }
+        return min;
+    }
+
+    public int parseInt(String str){
+        return ((str.charAt(0)-'0')*10 + (str.charAt(1)-'0'))*60 +
+                (str.charAt(3)-'0')*10 + (str.charAt(4)-'0');
+    }
+
     //540. 有序数组中的单一元素
     //给定一个只包含整数的有序数组，每个元素都会出现两次，唯有一个数只会出现一次，找出这个数。
     public int singleNonDuplicate(int[] nums) {
@@ -614,7 +737,6 @@ public class LeetCodeArrays {
         }
         return nums[nums.length - 1];
     }
-
 
     //560. 和为K的子数组
     //给定一个整数数组和一个整数 k，你需要找到该数组中和为 k 的连续的子数组的个数。
