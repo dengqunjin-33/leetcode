@@ -284,10 +284,6 @@ public class LeetCodeStrings {
         return res.reverse().toString();
     }
 
-    public static void main(String[] args) {
-        multiply("98","8");
-    }
-
     //97. 交错字符串
     //给定三个字符串 s1、s2、s3，请你帮忙验证 s3 是否是由 s1 和 s2 交错 组成的。
     //两个字符串 s 和 t 交错 的定义与过程如下，其中每个字符串都会被分割成若干 非空 子字符串：
@@ -648,5 +644,86 @@ public class LeetCodeStrings {
             res.append(data, stack.pop(),data.length()).append(k);
         }
         return res;
+    }
+
+    //执行用时：12 ms, 在所有 Java 提交中击败了75.35%的用户
+    //内存消耗：39.2 MB, 在所有 Java 提交中击败了75.63%的用户
+    //1881. 插入后的最大值
+    //给你一个非常大的整数 n 和一个整数数字 x ，大整数 n 用一个字符串表示。n 中每一位数字和数字 x 都处于闭区间 [1, 9] 中，且 n 可能表示一个 负数 。
+    //你打算通过在 n 的十进制表示的任意位置插入 x 来 最大化 n 的 数值。但 不能 在负号的左边插入 x 。
+    //例如，如果 n = 73 且 x = 6 ，那么最佳方案是将 6 插入 7 和 3 之间，使 n = 763 。
+    //如果 n = -55 且 x = 2 ，那么最佳方案是将 2 插在第一个 5 之前，使 n = -255 。
+    //返回插入操作后，用字符串表示的 n 的最大值。
+    public static String maxValue(String n, int x) {
+        StringBuffer sb = new StringBuffer();
+        char[] chars = n.toCharArray();
+        boolean flag = false;
+        if (chars[0] == '-'){
+            sb.append('-');
+            for (int i = 1; i < chars.length; i++) {
+                if (chars[i] - '0' > x){
+                    sb.append(x);
+                    flag = true;
+                    sb.append(n.substring(i));
+                    break;
+                }
+                sb.append(chars[i]);
+            }
+        }else {
+            for (int i = 0; i < chars.length; i++) {
+                if (chars[i] - '0' < x){
+                    sb.append(x);
+                    flag = true;
+                    sb.append(n.substring(i));
+                    break;
+                }
+                sb.append(chars[i]);
+            }
+        }
+        if (!flag){
+            sb.append(x);
+        }
+        return sb.toString();
+    }
+
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：36.1 MB, 在所有 Java 提交中击败了97.65%的用户
+    //1904. 你完成的完整对局数
+    //一款新的在线电子游戏在近期发布，在该电子游戏中，以 刻钟 为周期规划若干时长为 15 分钟 的游戏对局。这意味着，在 HH:00、HH:15、HH:30 和 HH:45 ，将会开始一个新的对局，其中 HH 用一个从 00 到 23 的整数表示。游戏中使用 24 小时制的时钟 ，所以一天中最早的时间是 00:00 ，最晚的时间是 23:59 。
+    //给你两个字符串 startTime 和 finishTime ，均符合 "HH:MM" 格式，分别表示你 进入 和 退出 游戏的确切时间，请计算在整个游戏会话期间，你完成的 完整对局的对局数 。
+    //例如，如果 startTime = "05:20" 且 finishTime = "05:59" ，这意味着你仅仅完成从 05:30 到 05:45 这一个完整对局。而你没有完成从 05:15 到 05:30 的完整对局，因为你是在对局开始后进入的游戏；同时，你也没有完成从 05:45 到 06:00 的完整对局，因为你是在对局结束前退出的游戏。
+    //如果 finishTime 早于 startTime ，这表示你玩了个通宵（也就是从 startTime 到午夜，再从午夜到 finishTime）。
+    //假设你是从 startTime 进入游戏，并在 finishTime 退出游戏，请计算并返回你完成的 完整对局的对局数 。
+    public static int numberOfRounds(String startTime, String finishTime) {
+        int start = getTimeParseMin(startTime);
+        int end = getTimeParseMin(finishTime);
+        int allTime = 0;
+        int count = 0;
+
+        if (start >= end){
+            allTime += 1440;
+        }
+
+        if (start % 15 != 0){
+            ++count;
+            start -= start % 15;
+        }
+        end -= end % 15;
+
+        allTime += end - start;
+
+
+        return Math.max(allTime / 15 - count, 0);
+    }
+
+    public static int getTimeParseMin(String time) {
+        return (time.charAt(0) - '0') * 600 +
+                (time.charAt(1) - '0') * 60 +
+                (time.charAt(3) - '0') * 10 +
+                (time.charAt(4) - '0');
+    }
+
+    public static void main(String[] args) {
+        numberOfRounds("00:47","00:57");
     }
 }
