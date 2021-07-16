@@ -415,6 +415,49 @@ public class InterviewQuestionsAll {
         return false;
     }
 
+    //执行用时：9 ms, 在所有 Java 提交中击败了62.32%的用户
+    //内存消耗：38.3 MB, 在所有 Java 提交中击败了63.95%的用户
+    //面试题 04.12. 求和路径
+    //给定一棵二叉树，其中每个节点都含有一个整数数值(该值或正或负)。
+    //设计一个算法，打印节点数值总和等于某个给定值的所有路径的数量。
+    //注意，路径不一定非得从二叉树的根节点或叶节点开始或结束，
+    //但是其方向必须向下(只能从父节点指向子节点方向)。
+    public static int pathSum(TreeNode root, int sum) {
+        int count = 0;
+        if (null == root){
+            return count;
+        }
+        Deque<TreeNode> deque = new LinkedList<>();
+        deque.push(root);
+        while (!deque.isEmpty()){
+            int size = deque.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = deque.pop();
+                count += getRootPathSum(node, sum);
+                if (null != node.left){
+                    deque.push(node.left);
+                }
+                if (null != node.right){
+                    deque.push(node.right);
+                }
+            }
+        }
+        return count;
+    }
+
+    public static int getRootPathSum(TreeNode root, int sum) {
+        int count = 0;
+        if (null == root){
+            return count;
+        }
+        if (root.val == sum){
+            count += 1;
+        }
+        count += getRootPathSum(root.left, sum - root.val);
+        count += getRootPathSum(root.right,sum - root.val);
+        return count;
+    }
+
     //面试题 05.01. 插入
     //给定两个整型数字 N 与 M，以及表示比特位置的 i 与 j（i <= j，且从 0 位开始计算）。
     //编写一种方法，使 M 对应的二进制数字插入 N 对应的二进制数字的第 i ~ j 位区域，不足之处用 0 补齐。具体插入过程如图所示。
@@ -559,6 +602,43 @@ public class InterviewQuestionsAll {
         return result;
     }
 
+    //执行用时：1 ms, 在所有 Java 提交中击败了99.68%的用户
+    //内存消耗：39.8 MB, 在所有 Java 提交中击败了19.30%的用户
+    //面试题 08.02. 迷路的机器人
+    //设想有个机器人坐在一个网格的左上角，网格 r 行 c 列。机器人只能向下或向右移动，但不能走到一些被禁止的网格（有障碍物）。
+    //设计一种算法，寻找机器人从左上角移动到右下角的路径。
+    public static List<List<Integer>> pathWithObstacles(int[][] obstacleGrid) {
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[obstacleGrid.length - 1][obstacleGrid[0].length - 1] ==1) {
+            return new ArrayList<>();
+        }
+
+        List<List<Integer>> res = new ArrayList<>();
+        long timeMillis = System.currentTimeMillis();
+        pathWithObstacles(obstacleGrid,0,0, new ArrayList<>(),res);
+        System.out.println("时间:" + (System.currentTimeMillis() - timeMillis));
+        return res;
+    }
+
+    public static boolean pathWithObstacles(int[][] obstacleGrid,int x,int y,List<List<Integer>> list,List<List<Integer>> res) {
+        if (!res.isEmpty() || x == obstacleGrid.length || y == obstacleGrid[0].length || obstacleGrid[x][y] == 1){
+            return false;
+        }
+        if (x == obstacleGrid.length - 1 && y == obstacleGrid[0].length - 1){
+            list.add(Arrays.asList(x,y));
+            res.addAll(list);
+            return true;
+        }
+        list.add(Arrays.asList(x,y));
+        if (pathWithObstacles(obstacleGrid,x + 1,y,list,res) || pathWithObstacles(obstacleGrid,x,y + 1,list,res)){
+            return true;
+        }else {
+            //这个很关键 使用obstacleGrid[x][y] = 1这样的话就不用重复计算了  节省了大量的时间
+            obstacleGrid[x][y] = 1;
+            list.remove(list.size() - 1);
+            return false;
+        }
+    }
+
     //面试题 08.03. 魔术索引
     //魔术索引。 在数组A[0...n-1]中，有所谓的魔术索引，
     //满足条件A[i] = i。给定一个有序整数数组，编写一种方法找出魔术索引，
@@ -604,6 +684,41 @@ public class InterviewQuestionsAll {
             return B + multiply(A-1,B);
         }
         return A + multiply(A,B-1);
+    }
+
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：39.1 MB, 在所有 Java 提交中击败了59.74%的用户
+    //面试题 10.03. 搜索旋转数组
+    //搜索旋转数组。给定一个排序后的数组，包含n个整数，但这个数组已被旋转过很多次了，次数不详。
+    //请编写代码找出数组中的某个元素，假设数组元素原先是按升序排列的。若有多个相同元素，返回索引值最小的一个。
+    public int search(int[] arr, int target) {
+        for (int i = 0; i < arr.length; i++) {
+            if (target == arr[i]){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //执行用时：5 ms, 在所有 Java 提交中击败了99.07%的用户
+    //内存消耗：43.9 MB, 在所有 Java 提交中击败了66.84%的用户
+    //面试题 10.09. 排序矩阵查找
+    //给定M×N矩阵，每一行、每一列都按升序排列，请编写代码找出某元素。
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int x = matrix.length - 1;
+        int y = 0;
+        while (x >= 0 && y < matrix[0].length){
+            if (matrix[x][y] == target){
+                return true;
+            }
+            if (matrix[x][y] < target){
+                ++y;
+            }
+            if (matrix[x][y] > target){
+                --x;
+            }
+        }
+        return false;
     }
 
     //面试题 16.01. 交换数字
