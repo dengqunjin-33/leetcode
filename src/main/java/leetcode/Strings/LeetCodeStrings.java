@@ -646,6 +646,57 @@ public class LeetCodeStrings {
         return res;
     }
 
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：36.9 MB, 在所有 Java 提交中击败了17.45%的用户
+    //1844. 将所有数字用字符替换
+    //给你一个下标从 0 开始的字符串 s ，它的 偶数 下标处为小写英文字母，奇数 下标处为数字。
+    //定义一个函数 shift(c, x) ，其中 c 是一个字符且 x 是一个数字，函数返回字母表中 c 后面第 x 个字符。
+    //比方说，shift('a', 5) = 'f' 和 shift('x', 0) = 'x' 。
+    //对于每个 奇数 下标 i ，你需要将数字 s[i] 用 shift(s[i-1], s[i]) 替换。
+    //请你替换所有数字以后，将字符串 s 返回。题目 保证 shift(s[i-1], s[i]) 不会超过 'z' 。
+    public String replaceDigits(String s) {
+        StringBuffer sb = new StringBuffer();
+        char[] chars = s.toCharArray();
+        for (int i = 1; i < chars.length; i+=2) {
+            chars[i] = (char)(chars[i - 1] + chars[i] - '0');
+        }
+        sb.append(chars);
+        return sb.toString();
+    }
+
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：36.5 MB, 在所有 Java 提交中击败了63.18%的用户
+    //1859. 将句子排序
+    //一个 句子 指的是一个序列的单词用单个空格连接起来，且开头和结尾没有任何空格。每个单词都只包含小写或大写英文字母。
+    //我们可以给一个句子添加 从 1 开始的单词位置索引 ，并且将句子中所有单词 打乱顺序 。
+    //比方说，句子 "This is a sentence" 可以被打乱顺序得到 "sentence4 a3 is2 This1" 或者 "is2 sentence4 This1 a3" 。
+    //给你一个 打乱顺序 的句子 s ，它包含的单词不超过 9 个，请你重新构造并得到原本顺序的句子。
+    public String sortSentence(String s) {
+        StringBuffer[] sb = new StringBuffer[10];
+        char[] chars = s.toCharArray();
+        StringBuffer temp = new StringBuffer();
+        for (char ch : chars) {
+            if (ch == ' '){
+                continue;
+            }
+            if (ch > '0' && ch <= '9'){
+                sb[ch - '0'] = temp;
+                temp = new StringBuffer();
+            }else {
+                temp.append(ch);
+            }
+        }
+        StringBuffer res = new StringBuffer();
+        for (int i = 1; i < 9; i++) {
+            if (null != sb[i]){
+                res.append(sb[i]).append(' ');
+            }
+        }
+        res.deleteCharAt(res.length() - 1);
+        return res.toString();
+    }
+
+
     //执行用时：12 ms, 在所有 Java 提交中击败了75.35%的用户
     //内存消耗：39.2 MB, 在所有 Java 提交中击败了75.63%的用户
     //1881. 插入后的最大值
@@ -721,9 +772,5 @@ public class LeetCodeStrings {
                 (time.charAt(1) - '0') * 60 +
                 (time.charAt(3) - '0') * 10 +
                 (time.charAt(4) - '0');
-    }
-
-    public static void main(String[] args) {
-        numberOfRounds("00:47","00:57");
     }
 }
