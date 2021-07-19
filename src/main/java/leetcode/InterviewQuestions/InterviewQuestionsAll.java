@@ -686,6 +686,29 @@ public class InterviewQuestionsAll {
         return A + multiply(A,B-1);
     }
 
+    //执行用时：8 ms, 在所有 Java 提交中击败了88.78%的用户
+    //内存消耗：42 MB, 在所有 Java 提交中击败了21.11%的用户
+    //面试题 10.02. 变位词组
+    //编写一种方法，对字符串数组进行排序，将所有变位词组合在一起。变位词是指字母相同，但排列不同的字符串。
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        Map<String,List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+            StringBuffer sb = new StringBuffer();
+            sb.append(chars);
+            List<String> list = map.computeIfAbsent(sb.toString(), k -> new ArrayList<>());
+            list.add(str);
+        }
+        Collection<List<String>> values = map.values();
+        List<List<String>> res = new ArrayList<>(values);
+        return res;
+    }
+
+    public static void main(String[] args) {
+        groupAnagrams(new String[]{"eat","tea","tan","ate","nat","bat"});
+    }
+
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：39.1 MB, 在所有 Java 提交中击败了59.74%的用户
     //面试题 10.03. 搜索旋转数组

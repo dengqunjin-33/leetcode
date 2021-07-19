@@ -1065,6 +1065,66 @@ public class LeetCodeArrays {
         return (sum + 1000000007 - maxDiff) % 1000000007;
     }
 
+    //暴力法 超时了
+    //1838. 最高频元素的频数
+    //元素的 频数 是该元素在一个数组中出现的次数。
+    //给你一个整数数组 nums 和一个整数 k 。在一步操作中，你可以选择 nums 的一个下标，并将该下标对应元素的值增加 1 。
+    //执行最多 k 次操作后，返回数组中最高频元素的 最大可能频数 。
+    public int maxFrequency(int[] nums, int k) {
+        if (1 == nums.length){
+            return 1;
+        }
+        Arrays.sort(nums);
+        int max = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int index = 1;
+            int tempk = k;
+            for (int j = i + 1; j < nums.length; j++) {
+                int diff = nums[j] - nums[j - 1];
+                tempk -= diff * index;
+                if (tempk < 0){
+                    max = Math.max(max,j - i);
+                    break;
+                }else if (j == nums.length - 1){
+                    max = Math.max(max,j - i + 1);
+                    break;
+                }else {
+                    ++index;
+                }
+            }
+        }
+        return max;
+    }
+
+    //大佬的  双指针
+    //1838. 最高频元素的频数
+    //元素的 频数 是该元素在一个数组中出现的次数。
+    //给你一个整数数组 nums 和一个整数 k 。在一步操作中，你可以选择 nums 的一个下标，并将该下标对应元素的值增加 1 。
+    //执行最多 k 次操作后，返回数组中最高频元素的 最大可能频数 。
+    public int maxFrequency2(int[] nums, int k) {
+        // 先升序
+        Arrays.sort(nums);
+        int n = nums.length;
+        int res = 0;
+        int cnt = 0;
+        // 双指针遍历数组
+        for(int i = 0, j = 0; i < n; i++) {
+            // 指针区间数都变成当前位的数，加上所需的增加次数
+            if(i > 0) {
+                cnt += (i - j) * (nums[i] - nums[i - 1]);
+            }
+            // 如果所需的次数超过最大允许次数，则左侧边界开始向右，区间变小，所需次数也会变少
+            while(cnt > k && i > j) {
+                cnt -= (nums[i] - nums[j]);
+                j ++;
+            }
+            // 取最大值
+            res = Math.max(i - j + 1, res);
+        }
+
+        return res;
+    }
+
     //执行用时：
     //3 ms, 在所有 Java 提交中击败了99.35%的用户
     //内存消耗：55.2 MB, 在所有 Java 提交中击败了82.88%的用户
