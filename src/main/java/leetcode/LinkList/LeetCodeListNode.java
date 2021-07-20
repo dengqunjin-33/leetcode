@@ -630,6 +630,51 @@ public class LeetCodeListNode {
         return head;
     }
 
+    //执行用时：4 ms, 在所有 Java 提交中击败了77.61%的用户
+    //内存消耗：39 MB, 在所有 Java 提交中击败了12.65%的用户
+    //445. 两数相加 II
+    //给你两个 非空 链表来代表两个非负整数。数字最高位位于链表开始位置。它们的每个节点只存储一位数字。将这两数相加会返回一个新的链表。
+    //你可以假设除了数字 0 之外，这两个数字都不会以零开头。
+    public ListNode addTwoNumbersII(ListNode l1, ListNode l2) {
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();
+        while (null != l1){
+            s1.push(l1.val);
+            l1 = l1.next;
+        }
+        while (null != l2){
+            s2.push(l2.val);
+            l2 = l2.next;
+        }
+
+        ListNode res = null;
+
+        int temp = 0;
+        while (!s1.isEmpty() || s2.isEmpty()){
+            if (!s1.isEmpty()){
+                temp += s1.pop();
+            }
+            if (!s2.isEmpty()){
+                temp += s2.pop();
+            }
+
+            ListNode tempNode = new ListNode(temp % 10);
+            if (null != res) {
+                tempNode.next = res;
+            }
+            res = tempNode;
+
+            temp /= 10;
+        }
+
+        if (0 != temp){
+            ListNode tempNode = new ListNode(temp % 10);
+            tempNode.next = res;
+            res = tempNode;
+        }
+        return res;
+    }
+
     //876. 链表的中间结点
     //给定一个头结点为 head 的非空单链表，返回链表的中间结点。
     //如果有两个中间结点，则返回第二个中间结点。

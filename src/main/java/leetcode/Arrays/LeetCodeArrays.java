@@ -601,6 +601,57 @@ public class LeetCodeArrays {
         return flag[i][j] = index;
     }
 
+    //执行用时：45 ms, 在所有 Java 提交中击败了5.05%的用户
+    //内存消耗：43.6 MB, 在所有 Java 提交中击败了75.29%的用户
+    //378. 有序矩阵中第 K 小的元素
+    //给你一个 n x n 矩阵 matrix ，其中每行和每列元素均按升序排序，找到矩阵中第 k 小的元素。
+    //请注意，它是 排序后 的第 k 小元素，而不是第 k 个 不同 的元素。
+    public static int kthSmallest(int[][] matrix, int k) {
+        int row = matrix.length;
+        int[] index = new int[row];
+        int res = 0;
+        int minIndex = 0;
+        while (k > 0){
+            for (int i = 0; i < row; i++) {
+                if (index[minIndex] == row && index[i] < row){
+                    minIndex = i;
+                }else if (index[minIndex] == row && index[i] == row){
+                }else if (index[minIndex] < row && index[i] == row){
+                }else if (matrix[minIndex][index[minIndex]] > matrix[i][index[i]]){
+                    minIndex = i;
+                }
+            }
+            res = matrix[minIndex][index[minIndex]];
+            ++index[minIndex];
+            k--;
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        kthSmallest(new int[][]{{1,2},{1,3}},3);
+    }
+
+    //执行用时：3 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：47.3 MB, 在所有 Java 提交中击败了53.13%的用户
+    //使用了额外的空间
+    //442. 数组中重复的数据
+    //给定一个整数数组 a，其中1 ≤ a[i] ≤ n （n为数组长度）, 其中有些元素出现两次而其他元素出现一次。
+    //找到所有出现两次的元素。
+    //你可以不用到任何额外空间并在O(n)时间复杂度内解决这个问题吗？
+    public List<Integer> findDuplicates(int[] nums) {
+        List<Integer> res = new ArrayList<>();
+        boolean[] flag = new boolean[nums.length + 1];
+        for (int num : nums) {
+            if (flag[num]){
+                res.add(num);
+            }else {
+                flag[num] = true;
+            }
+        }
+        return res;
+    }
+
     //执行用时：2 ms, 在所有 Java 提交中击败了98.34%的用户
     //内存消耗：40.7 MB, 在所有 Java 提交中击败了23.34%的用户
     //498. 对角线遍历
