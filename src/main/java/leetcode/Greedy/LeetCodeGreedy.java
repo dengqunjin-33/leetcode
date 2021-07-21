@@ -323,7 +323,29 @@ public class LeetCodeGreedy {
         return sum;
     }
 
+    //执行用时：10 ms, 在所有 Java 提交中击败了90.36%的用户
+    //内存消耗：38.9 MB, 在所有 Java 提交中击败了23.50%的用户
+    //910. 最小差值 II
+    //给你一个整数数组 A，对于每个整数 A[i]，可以选择 x = -K 或是 x = K （K 总是非负整数），并将 x 加到 A[i] 中。
+    //在此过程之后，得到数组 B。
+    //返回 B 的最大值和 B 的最小值之间可能存在的最小差值。
+    public static int smallestRangeII(int[] nums, int k) {
+        if (nums.length < 2){
+            return 0;
+        }
+        Arrays.sort(nums);
+        int res=nums[nums.length-1]-nums[0];
+        //遍历求最小的最大值和最小值的差
+        for(int i = 0;i < nums.length - 1;i++){
+            int high = Math.max(nums[i] + k,nums[nums.length-1]-k);
+            int low = Math.min(nums[i + 1] - k,nums[0] + k);
+            res = Math.min(res,high-low);
+        }
+        //返回结果
+        return res;
+    }
+
     public static void main(String[] args) {
-        numRabbits(new int[]{0,0,1,1,1});
+        System.out.println(smallestRangeII(new int[]{1,3,6},3));
     }
 }

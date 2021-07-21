@@ -4,45 +4,33 @@ import java.util.*;
 public class LeetCodeListNode {
 
     //2. 两数相加
+    //执行用时：2 ms, 在所有 Java 提交中击败了99.24%的用户
+    //内存消耗：38.4 MB, 在所有 Java 提交中击败了91.94%的用户
+    //给你两个非空 的链表，表示两个非负的整数。它们每位数字都是按照逆序的方式存储的，并且每个节点只能存储一位数字。
+    //请你将两个数相加，并以相同形式返回一个表示和的链表。
+    //你可以假设除了数字 0 之外，这两个数都不会以 0开头。
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode preNode = new ListNode(0);
-        ListNode curNode = preNode;
-        int sum;
-        boolean flag = false;
+        int sum = 0;
+        ListNode res = new ListNode(-1);
+        ListNode cur = res;
         while (null != l1 || null != l2){
-            if (null == l1){
-                sum = l2.val;
-            }else if (null == l2){
-                sum = l1.val;
-            }else {
-                sum = l1.val + l2.val;
-            }
-
-            sum = flag ? ++sum : sum;
-
-            if (sum >= 10){
-                curNode.next = new ListNode(sum - 10);
-                flag = true;
-            }else {
-                curNode.next = new ListNode(sum);
-                flag = false;
-            }
-
             if (null != l1){
+                sum += l1.val;
                 l1 = l1.next;
             }
-
             if (null != l2){
+                sum += l2.val;
                 l2 = l2.next;
             }
-
-            curNode = curNode.next;
+            ListNode temp = new ListNode(sum % 10);
+            sum /= 10;
+            cur.next = temp;
+            cur = temp;
         }
-
-        if (flag){
-            curNode.next = new ListNode(1);
+        if (sum != 0){
+            cur.next = new ListNode(sum);
         }
-        return preNode.next;
+        return res.next;
     }
 
     public static class ListNode {
