@@ -207,6 +207,26 @@ public class LeetCode0to600 {
         }
     }
 
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：38.7 MB, 在所有 Java 提交中击败了21.09%的用户
+    //80. 删除有序数组中的重复项 II
+    //给你一个有序数组 nums ，请你 原地 删除重复出现的元素，使每个元素 最多出现两次 ，返回删除后数组的新长度。
+    //不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。
+    public int removeDuplicates(int[] nums) {
+        int len = nums.length;
+        if (len < 3){
+            return len;
+        }
+        int slow = 2;
+        for (int i = 2 ; i < len; ++i){
+            if (nums[i] != nums[slow - 2]){
+                nums[slow] = nums[i];
+                slow ++ ;
+            }
+        }
+        return slow;
+    }
+
     //154. 寻找旋转排序数组中的最小值 II
     //已知一个长度为 n 的数组，预先按照升序排列，经由 1 到 n 次 旋转 后，得到输入数组。例如，原数组 nums = [0,1,4,4,5,6,7] 在变化后可能得到：
     //若旋转 4 次，则可以得到 [4,5,6,7,0,1,4]
