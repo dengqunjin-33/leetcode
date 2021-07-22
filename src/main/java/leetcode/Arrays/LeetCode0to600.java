@@ -342,6 +342,32 @@ public class LeetCode0to600 {
         return ans;
     }
 
+    //执行用时：3 ms, 在所有 Java 提交中击败了35.80%的用户
+    //内存消耗：42.5 MB, 在所有 Java 提交中击败了27.10%的用户
+    //229. 求众数 II
+    //给定一个大小为 n 的整数数组，找出其中所有出现超过 ⌊ n/3 ⌋ 次的元素。
+    //进阶：尝试设计时间复杂度为 O(n)、空间复杂度为 O(1)的算法解决此问题。
+    public List<Integer> majorityElement(int[] nums) {
+        Arrays.sort(nums);
+        List<Integer> res = new ArrayList<>();
+        int len = nums.length / 3;
+        int left = 0;
+        int right = 0;
+        while (right < nums.length){
+            if (nums[left] != nums[right]){
+                if (right - left > len){
+                    res.add(nums[left]);
+                }
+                left = right;
+            }
+            ++right;
+        }
+        if (right - left > len){
+            res.add(nums[left]);
+        }
+        return res;
+    }
+
     //执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：49.2 MB, 在所有 Java 提交中击败了36.99%的用户
     //238. 除自身以外数组的乘积
