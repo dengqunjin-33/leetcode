@@ -66,10 +66,6 @@ public class LeetCodeArrays600later {
         return res;
     }
 
-    public static void main(String[] args) {
-        dailyTemperatures(new int[]{73,74,75,71,69,72,76,73});
-    }
-
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：38.7 MB, 在所有 Java 提交中击败了38.27%的用户
     //832. 翻转图像
@@ -167,6 +163,147 @@ public class LeetCodeArrays600later {
         }
 
         return maxSideLength(mat,x1,y1,x2 + 1,y2 + 1,threshold,sum);
+    }
+
+    //执行用时：3 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：39.3 MB, 在所有 Java 提交中击败了14.15%的用户
+    //1513. 仅含 1 的子串数
+    //给你一个二进制字符串 s（仅由 '0' 和 '1' 组成的字符串）。
+    //返回所有字符都为 1 的子字符串的数目。
+    //由于答案可能很大，请你将它对 10^9 + 7 取模后返回。
+    public static int numSub(String s) {
+        int MOD = 1000000007;
+        char[] chars = s.toCharArray();
+        int len = chars.length;
+        int sum = 0;
+
+        int left = -1;
+        int right = -1;
+
+        for (int i = 0; i < len; i++) {
+            if (chars[i] == '0') {
+                if (right == left) {
+                    ++left;
+                } else {
+                    int dist = (right - left);
+                    dist = calNumSub(dist,MOD);
+                    sum += dist;
+                    sum %= MOD;
+                    left = i;
+                }
+            }
+            ++right;
+        }
+        if (right > left){
+            int dist = (right - left);
+            dist = calNumSub(dist,MOD);
+            sum += dist;
+            sum %= MOD;
+        }
+        return sum;
+    }
+
+    public static int calNumSub(int len,int MOD) {
+        long res = (long) len * (len + 1) / 2;
+        return (int) (res % MOD);
+    }
+
+    //执行用时：136 ms, 在所有 Java 提交中击败了23.48%的用户
+    //内存消耗：39.6 MB, 在所有 Java 提交中击败了33.33%的用户
+    //1545. 找出第 N 个二进制字符串中的第 K 位
+    //给你两个正整数 n 和 k，二进制字符串  Sn 的形成规则如下：
+    //S1 = "0"
+    //当 i > 1 时，Si = Si-1 + "1" + reverse(invert(Si-1))
+    //其中 + 表示串联操作，reverse(x) 返回反转 x 后得到的字符串，而 invert(x) 则会翻转 x 中的每一位（0 变为 1，而 1 变为 0）。
+    //例如，符合上述描述的序列的前 4 个字符串依次是：
+    //S1 = "0"
+    //S2 = "011"
+    //S3 = "0111001"
+    //S4 = "011100110110001"
+    //请你返回  Sn 的 第 k 位字符 ，题目数据保证 k 一定在 Sn 长度范围以内。
+    public static char findKthBit(int n, int k) {
+        if (k == 1){
+            return '0';
+        }
+        StringBuffer sb = new StringBuffer().append('0');
+        for (int i = 1; i < n; i++) {
+            if (k <= sb.length()){
+                return sb.charAt(k - 1);
+            }
+            int len = sb.length();
+            sb.append('1');
+            for (int j = len - 1; j >= 0; j--) {
+                if ('0' == sb.charAt(j)){
+                    sb.append('1');
+                }else {
+                    sb.append('0');
+                }
+            }
+        }
+        return sb.charAt(k - 1);
+    }
+
+    //执行用时：12 ms, 在所有 Java 提交中击败了34.09%的用户
+    //内存消耗：42.3 MB, 在所有 Java 提交中击败了32.57%的用户
+    //1545. 找出第 N 个二进制字符串中的第 K 位
+    //给你两个正整数 n 和 k，二进制字符串  Sn 的形成规则如下：
+    //S1 = "0"
+    //当 i > 1 时，Si = Si-1 + "1" + reverse(invert(Si-1))
+    //其中 + 表示串联操作，reverse(x) 返回反转 x 后得到的字符串，而 invert(x) 则会翻转 x 中的每一位（0 变为 1，而 1 变为 0）。
+    //例如，符合上述描述的序列的前 4 个字符串依次是：
+    //S1 = "0"
+    //S2 = "011"
+    //S3 = "0111001"
+    //S4 = "011100110110001"
+    //请你返回  Sn 的 第 k 位字符 ，题目数据保证 k 一定在 Sn 长度范围以内。
+    public static char findKthBit2(int n, int k) {
+        if (k == 1){
+            return '0';
+        }
+        char [] res = new char[(2 << n) - 1];
+        res[0] = '0';
+        int len = 1;
+        for (int i = 1; i < n; i++) {
+            if (k <= len){
+                return res[k - 1];
+            }
+            int tempLen = len;
+            res[len] = '1';
+            ++len;
+            for (int j = tempLen - 1; j >= 0; j--) {
+                res[len] = '0' == res[j] ? '1' : '0';
+                ++len;
+            }
+        }
+        return res[k - 1];
+    }
+
+    //执行用时：5 ms, 在所有 Java 提交中击败了39.45%的用户
+    //内存消耗：50.1 MB, 在所有 Java 提交中击败了88.07%的用户
+    //1685. 有序数组中差绝对值之和
+    //给你一个 非递减 有序整数数组 nums 。
+    //请你建立并返回一个整数数组 result，它跟 nums 长度相同，且result[i] 等于 nums[i] 与数组中所有其他元素差的绝对值之和。
+    //换句话说， result[i] 等于 sum(|nums[i]-nums[j]|) ，其中 0 <= j < nums.length 且 j != i （下标从 0 开始）。
+    public static int[] getSumAbsoluteDifferences(int[] nums) {
+        int len = nums.length;
+        int [] pre = new int[len];
+        pre[0] = nums[0];
+        for (int i = 1; i < len; i++) {
+            pre[i] = nums[i] + pre[i - 1];
+        }
+
+        int [] suf = new int[nums.length];
+        suf[len - 1] = nums[len - 1];
+        for (int i = len - 2; i >= 0; i--) {
+            suf[i] = suf[i + 1] + nums[i];
+        }
+        int[] res = new int[len];
+        for (int i = 0; i < len; i++) {
+            int left = i * nums[i] - suf[0] + suf[i];
+            int right = pre[len - 1] - pre[i] - (len - i - 1) * nums[i];
+            res[i] = right + left;
+        }
+        return res;
     }
 
     //暴力法 超时
@@ -458,4 +595,180 @@ public class LeetCodeArrays600later {
         }
         return res;
     }
+
+    //暴力
+    //执行用时：1 ms, 在所有 Java 提交中击败了67.54%的用户
+    //内存消耗：38 MB, 在所有 Java 提交中击败了5.15%的用户
+    //1893. 检查是否区域内所有整数都被覆盖
+    //给你一个二维整数数组 ranges 和两个整数 left 和 right 。每个 ranges[i] = [starti, endi] 表示一个从 starti 到 endi 的 闭区间 。
+    //如果闭区间 [left, right] 内每个整数都被 ranges 中 至少一个 区间覆盖，那么请你返回 true ，否则返回 false 。
+    //已知区间 ranges[i] = [starti, endi] ，如果整数 x 满足 starti <= x <= endi ，那么我们称整数x 被覆盖了。
+    public static boolean isCovered(int[][] ranges, int left, int right) {
+        int len = right - left + 1;
+        boolean[] flag = new boolean[len];
+        for(int[] nums : ranges){
+            for (int i = nums[0]; i <= nums[1]; i++) {
+                if (i - left >= 0 && i - left < len && !flag[i - left]){
+                    flag[i - left] = true;
+                }
+            }
+        }
+
+        for (int i = 0; i < len; i++) {
+            if (!flag[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //优化: 暴力 + 剪枝
+    //执行用时：
+    //0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：37.7 MB, 在所有 Java 提交中击败了51.16%的用户
+    //1893. 检查是否区域内所有整数都被覆盖
+    //给你一个二维整数数组 ranges 和两个整数 left 和 right 。每个 ranges[i] = [starti, endi] 表示一个从 starti 到 endi 的 闭区间 。
+    //如果闭区间 [left, right] 内每个整数都被 ranges 中 至少一个 区间覆盖，那么请你返回 true ，否则返回 false 。
+    //已知区间 ranges[i] = [starti, endi] ，如果整数 x 满足 starti <= x <= endi ，那么我们称整数x 被覆盖了。
+    public static boolean isCovered2(int[][] ranges, int left, int right) {
+        int len = right - left + 1;
+        int L = left;
+        int R = right;
+        //防止数组全是点的情况
+        boolean[] flag = new boolean[len];
+        for(int[] nums : ranges){
+            if (left >= nums[0] && right <= nums[1]){
+                return true;
+            }
+            if (left >= nums[0] && left <= nums[1]){
+                left = nums[1] + 1;
+            }
+            if (right >= nums[0] && right <= nums[1]){
+                right = nums[0] - 1;
+            }
+            if (left > right){
+                return true;
+            }
+
+            int max = Math.max(L, nums[0]) - L;
+            int min = Math.min(nums[1], R) - L;
+            for (int i = max; i <= min; i++) {
+                flag[i] = true;
+            }
+        }
+
+        for (int i = 0; i < len; i++) {
+            if (!flag[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //执行用时：1 ms, 在所有 Java 提交中击败了99.88%的用户
+    //内存消耗：54.1 MB, 在所有 Java 提交中击败了77.50%的用户
+    //1894. 找到需要补充粉笔的学生编号
+    //一个班级里有 n 个学生，编号为 0 到 n - 1 。每个学生会依次回答问题，编号为 0 的学生先回答，然后是编号为 1 的学生，以此类推，直到编号为 n - 1 的学生，然后老师会重复这个过程，重新从编号为 0 的学生开始回答问题。
+    //给你一个长度为 n 且下标从 0 开始的整数数组 chalk 和一个整数 k 。一开始粉笔盒里总共有 k 支粉笔。当编号为 i 的学生回答问题时，他会消耗 chalk[i] 支粉笔。如果剩余粉笔数量 严格小于 chalk[i] ，那么学生 i 需要 补充 粉笔。
+    //请你返回需要 补充 粉笔的学生 编号 。
+    public static int chalkReplacer(int[] chalk, int k) {
+        int sum = 0;
+        int len = chalk.length;
+        for (int i = 0; i < len; i++) {
+            if ((sum += chalk[i]) > k){
+                return i;
+            }
+        }
+
+        k = k % sum;
+
+        for (int i = 0; i < len; i++) {
+            if (k >= chalk[i]){
+                k -= chalk[i];
+            }else {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    //执行用时：10 ms, 在所有 Java 提交中击败了9.18%的用户
+    //内存消耗：83.2 MB, 在所有 Java 提交中击败了31.63%的用户
+    //1901. 找出顶峰元素 II
+    //一个 2D 网格中的 顶峰元素 是指那些 严格大于 其相邻格子(上、下、左、右)的元素。
+    //给你一个 从 0 开始编号 的 m x n 矩阵 mat ，其中任意两个相邻格子的值都 不相同 。找出 任意一个 顶峰元素 mat[i][j] 并 返回其位置 [i,j] 。
+    //你可以假设整个矩阵周边环绕着一圈值为 -1 的格子。
+    //要求必须写出时间复杂度为 O(m log(n)) 或 O(n log(m)) 的算法
+    public static int[] findPeakGrid(int[][] mat) {
+        int row = mat.length;
+        int col = mat[0].length;
+        boolean[][] flag = new boolean[row][col];
+        for (int x = 0; x < row; x++) {
+            for (int y = 0; y < col; y++) {
+                if (!flag[x][y]){
+                    boolean up = false;
+                    //上
+                    if (x > 0 && mat[x - 1][y] < mat[x][y]){
+                        flag[x - 1][y] = true;
+                        up = true;
+                    }else if (x == 0){
+                        up = true;
+                    }
+
+                    //下
+                    boolean down = false;
+                    if (x < mat.length - 1 && mat[x + 1][y] < mat[x][y]){
+                        flag[x + 1][y] = true;
+                        down = true;
+                    }else if (x == mat.length - 1){
+                        down = true;
+                    }
+
+                    //左
+                    boolean left = false;
+                    if (y > 0 && mat[x][y - 1] < mat[x][y]){
+                        flag[x][y - 1] = true;
+                        left = true;
+                    }else if(y == 0){
+                        left = true;
+                    }
+
+                    //右
+                    boolean right = false;
+                    if (y < mat[0].length - 1 && mat[x][y + 1] < mat[x][y]){
+                        flag[x][y + 1] = true;
+                        right = true;
+                    }else if (y == mat[0].length - 1){
+                        right = true;
+                    }
+
+                    if (up && down && left && right){
+                        return new int[]{x,y};
+                    }
+                }
+            }
+        }
+        return new int[]{-1,-1};
+    }
+
+    //执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：51.1 MB, 在所有 Java 提交中击败了92.85%的用户
+    //1936. 新增的最少台阶数
+    //给你一个 严格递增 的整数数组 rungs ，用于表示梯子上每一台阶的 高度 。当前你正站在高度为 0 的地板上，并打算爬到最后一个台阶。
+    //另给你一个整数 dist 。每次移动中，你可以到达下一个距离你当前位置（地板或台阶）不超过 dist 高度的台阶。当然，你也可以在任何正 整数 高度处插入尚不存在的新台阶。
+    //返回爬到最后一阶时必须添加到梯子上的 最少 台阶数。
+    public static int addRungs(int[] rungs, int dist) {
+        int last = 0;
+        int sum = 0;
+        for (int num : rungs) {
+            if (num - last > dist){
+                int distance = (num - last) % dist == 0 ? (num - last - dist) : (num - last);
+                sum +=  distance /  dist;
+            }
+            last = num;
+        }
+        return sum;
+    }
+
 }
