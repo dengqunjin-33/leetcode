@@ -1,9 +1,6 @@
 package leetcode.Tree;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class LeetCodeTree {
 
@@ -443,6 +440,34 @@ public class LeetCodeTree {
         root.val = sum;
         convertBST(root.left);
         return root;
+    }
+
+    //执行用时：
+    //1 ms, 在所有 Java 提交中击败了18.43%的用户
+    //内存消耗：35.7 MB, 在所有 Java 提交中击败了53.78%的用户
+    //671. 二叉树中第二小的节点
+    //给定一个非空特殊的二叉树，每个节点都是正数，并且每个节点的子节点数量只能为 2 或 0。如果一个节点有两个子节点的话，那么该节点的值等于两个子节点中较小的一个。
+    //更正式地说，root.val = min(root.left.val, root.right.val) 总成立。
+    //给出这样的一个二叉树，你需要输出所有节点中的第二小的值。如果第二小的值不存在的话，输出 -1 。
+    public int findSecondMinimumValue(TreeNode root) {
+        Set<Integer> set = new TreeSet<>();
+        findSecondMinimumValue(root,set);
+        if (set.size() < 2){
+            return -1;
+        }else {
+            Iterator<Integer> iterator = set.iterator();
+            iterator.next();
+            return iterator.next();
+        }
+    }
+
+    public void findSecondMinimumValue(TreeNode root, Set<Integer> set) {
+        if (null == root){
+            return ;
+        }
+        findSecondMinimumValue(root.left,set);
+        set.add(root.val);
+        findSecondMinimumValue(root.right,set);
     }
 
     //872. 叶子相似的树
