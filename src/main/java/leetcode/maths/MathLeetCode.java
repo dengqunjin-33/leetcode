@@ -443,6 +443,41 @@ public class MathLeetCode {
         return ans;
     }
 
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：35.9 MB, 在所有 Java 提交中击败了78.41%的用户
+    //1104. 二叉树寻路
+    //在一棵无限的二叉树上，每个节点都有两个子节点，树中的节点 逐行 依次按 “之” 字形进行标记。
+    //如下图所示，在奇数行（即，第一行、第三行、第五行……）中，按从左到右的顺序进行标记；
+    //而偶数行（即，第二行、第四行、第六行……）中，按从右到左的顺序进行标记。
+    public static List<Integer> pathInZigZagTree(int label) {
+        List<Integer> res = new ArrayList<>();
+        int dept = 1;
+        for (int i = 0; i < 31; i++) {
+            int temp = 1 << i;
+            if (label < temp){
+                dept = i;
+                break;
+            }
+        }
+
+        res.add(label);
+        if (dept % 2 == 0){
+            int temp = 1 << dept;
+            label = temp - label + (temp >> 1) - 1;
+        }
+        for (int i = dept - 1; i > 0; i--) {
+            int temp = 1 << (i - 1);
+            label = label >> 1;
+            res.add(i % 2 == 0 ? temp * 2 - (label - temp + 1) : label);
+        }
+        Collections.reverse(res);
+        return res;
+    }
+
+    public static void main(String[] args) {
+        pathInZigZagTree(26);
+    }
+
     //1344. 时钟指针的夹角
     //给你两个数 hour 和 minutes 。请你返回在时钟上，由给定时间的时针和分针组成的较小角的角度（60 单位制）。
     public static double angleClock(int hour, int minutes) {
