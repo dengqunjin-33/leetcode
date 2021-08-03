@@ -409,6 +409,19 @@ public class LeetCodeStrings {
         }
     }
 
+    //171. Excel表列序号
+    //给定一个Excel表格中的列名称，返回其相应的列序号。
+    public int titleToNumber(String columnTitle) {
+        char[] chars = columnTitle.toCharArray();
+        int base = 1;
+        int res = 0;
+        for (int i = chars.length - 1; i >= 0; i--) {
+            res += (chars[i] - 'A' + 1) * base;
+            base *= 26;
+        }
+        return res;
+    }
+
     //402. 移掉K位数字
     //给定一个以字符串表示的非负整数 num，移除这个数中的 k 位数字，使得剩下的数字最小。
     //注意:

@@ -538,6 +538,46 @@ public class LeetCodeTree {
         }
     }
 
+
+    //执行用时：7 ms, 在所有 Java 提交中击败了9.68%的用户
+    //内存消耗：38.6 MB, 在所有 Java 提交中击败了53.37%的用户
+    //987. 二叉树的垂序遍历
+    //给你二叉树的根结点 root ，请你设计算法计算二叉树的 垂序遍历 序列。
+    //对位于 (row, col) 的每个结点而言，其左右子结点分别位于 (row + 1, col - 1) 和 (row + 1, col + 1) 。树的根结点位于 (0, 0) 。
+    //二叉树的 垂序遍历 从最左边的列开始直到最右边的列结束，按列索引每一列上的所有结点，形成一个按出现位置从上到下排序的有序列表。如果同行同列上有多个结点，则按结点的值从小到大进行排序。
+    //返回二叉树的 垂序遍历 序列
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (null == root){
+            return res;
+        }
+        Map<Integer,Map<Integer,List<Integer>>> map = new HashMap<>();
+        verticalTraversal(root,map,0,0);
+        map.keySet().stream().sorted().forEach(key->{
+            Map<Integer, List<Integer>> listMap = map.get(key);
+            List<Integer> temp = new ArrayList<>();
+            listMap.keySet().stream().sorted().forEach(mapKey -> {
+                List<Integer> tempList = listMap.get(mapKey);
+                Collections.sort(tempList);
+                temp.addAll(tempList);
+            });
+            res.add(temp);
+        });
+        return res;
+    }
+
+    public void verticalTraversal(TreeNode node,Map<Integer,Map<Integer,List<Integer>>> map,int index,int layer) {
+        if (null == node){
+            return;
+        }
+        verticalTraversal(node.left,map,index - 1,layer + 1);
+        map.computeIfAbsent(index, k -> new HashMap<>())
+                .computeIfAbsent(layer, k -> new ArrayList<>())
+                .add(node.val);
+
+        verticalTraversal(node.right,map,index + 1, layer + 1);
+    }
+
     public static class TreeNode {
         int val;
         TreeNode left;

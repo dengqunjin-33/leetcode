@@ -848,4 +848,90 @@ public class LeetCode0to600 {
         }
         return count;
     }
+
+    //执行用时：6 ms, 在所有 Java 提交中击败了60.08%的用户
+    //内存消耗：39.8 MB, 在所有 Java 提交中击败了42.14%的用户
+    //581. 最短无序连续子数组
+    //给你一个整数数组 nums ，你需要找出一个 连续子数组 ，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序。
+    //请你找出符合题意的 最短 子数组，并输出它的长度。
+    public static int findUnsortedSubarray(int[] nums) {
+        int[] copy = Arrays.copyOfRange(nums, 0, nums.length);
+        Arrays.sort(nums);
+        int len = nums.length;
+        int[] res = {-1,-1};
+        for (int i = 0; i < len; i++) {
+            if (copy[i] != nums[i]){
+                res[0] = i;
+                break;
+            }
+        }
+        for (int i = len - 1; i >= 0; i--) {
+            if (copy[i] != nums[i]){
+                res[1] = i + 1;
+                break;
+            }
+        }
+        return res[1] - res[0];
+    }
+
+    //执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：39.6 MB, 在所有 Java 提交中击败了64.26%的用户
+    //581. 最短无序连续子数组
+    //给你一个整数数组 nums ，你需要找出一个 连续子数组 ，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序。
+    //请你找出符合题意的 最短 子数组，并输出它的长度。
+    public static int findUnsortedSubarray2(int[] nums) {
+        int len = nums.length;
+
+        if (len < 2){
+            return 0;
+        }
+        int left = len - 1;
+        int max = Integer.MIN_VALUE;
+        for (int i = 1; i < len; i++) {
+            if (nums[i] < nums[i - 1]){
+                max = nums[i - 1];
+                left = i - 1;
+                break;
+            }
+        }
+        if (max == Integer.MIN_VALUE){
+            return 0;
+        }
+        int right = 0;
+        int min = Integer.MAX_VALUE;
+        for (int i = len - 1; i > 0; i--) {
+            if (nums[i] < nums[i - 1]){
+                min = nums[i];
+                right = i;
+                break;
+            }
+        }
+        if (max == Integer.MAX_VALUE){
+            return 0;
+        }
+        for (int i = left; i <= right; i++) {
+            min = Math.min(nums[i],min);
+            max = Math.max(nums[i],max);
+        }
+        for (int i = left; i >= 0; i--) {
+            if (nums[i] > min){
+                left = i;
+            }else {
+                break;
+            }
+        }
+        for (int i = right; i < len; i++) {
+            if (nums[i] < max){
+                right = i;
+            }else {
+                break;
+            }
+        }
+
+        return right - left + 1;
+    }
+
+    public static void main(String[] args) {
+        findUnsortedSubarray2(new int[]{2,1,5,4,3});
+    }
 }
