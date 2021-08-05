@@ -53,8 +53,7 @@ public class LeetCodeArrays600later {
             }
         }
         return count;
-    }
-
+    }//1 3 4 5 6 8 9 11 12 13 14
 
     //645. 错误的集合
     //集合 s 包含从 1 到 n 的整数。不幸的是，因为数据错误，导致集合里面某一个数字复制了成了集合里面的另外一个数字的值，导致集合 丢失了一个数字 并且 有一个数字重复 。
@@ -117,6 +116,86 @@ public class LeetCodeArrays600later {
         }
         return res;
     }
+
+    //超时了
+    //802. 找到最终的安全状态
+    //在有向图中，以某个节点为起始节点，从该点出发，每一步沿着图中的一条有向边行走。如果到达的节点是终点（即它没有连出的有向边），则停止。
+    //对于一个起始节点，如果从该节点出发，无论每一步选择沿哪条有向边行走，最后必然在有限步内到达终点，则将该起始节点称作是 安全 的。
+    //返回一个由图中所有安全的起始节点组成的数组作为答案。答案数组中的元素应当按 升序 排列。
+    //该有向图有 n 个节点，按 0 到 n - 1 编号，其中 n 是 graph 的节点数。图以下述形式给出：graph[i] 是编号 j 节点的一个列表，满足 (i, j) 是图的一条有向边。
+    public static List<Integer> eventualSafeNodes(int[][] graph) {
+        int len = graph.length;
+        List<Integer> res = new ArrayList<>();
+        byte[] exclude = new byte[len];
+        for (int i = 0; i < len; i++) {
+            if ((0 == exclude[i]) && dfs(graph,exclude,i,0,len)){
+                res.add(i);
+            }
+        }
+        return res;
+    }
+
+    public static boolean dfs(int[][] graph, byte[] exclude, int index, int count, int n){
+        if (count == n || 2 == exclude[index]){
+            return false;
+        }
+        if (1 == exclude[index]){
+            exclude[index] = 2;
+            return false;
+        }
+        if (0 != graph[index].length){
+            exclude[index] = 1;
+            for (int arr : graph[index]) {
+                if (!dfs(graph,exclude,arr,count + 1,n)){
+                    exclude[index] = 2;
+                    return false;
+                }
+            }
+            exclude[index] = 0;
+        }
+        return true;
+    }
+
+    //大佬的
+    //执行用时：4 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：48.3 MB, 在所有 Java 提交中击败了38.34%的用户
+    //802. 找到最终的安全状态
+    //在有向图中，以某个节点为起始节点，从该点出发，每一步沿着图中的一条有向边行走。如果到达的节点是终点（即它没有连出的有向边），则停止。
+    //对于一个起始节点，如果从该节点出发，无论每一步选择沿哪条有向边行走，最后必然在有限步内到达终点，则将该起始节点称作是 安全 的。
+    //返回一个由图中所有安全的起始节点组成的数组作为答案。答案数组中的元素应当按 升序 排列。
+    //该有向图有 n 个节点，按 0 到 n - 1 编号，其中 n 是 graph 的节点数。图以下述形式给出：graph[i] 是编号 j 节点的一个列表，满足 (i, j) 是图的一条有向边。
+    public List<Integer> eventualSafeNodes2(int[][] graph) {
+        int n = graph.length;
+        int[] color = new int[n];
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < n; ++i) {
+            if (safe(graph, color, i)) {
+                ans.add(i);
+            }
+        }
+        return ans;
+    }
+
+    public boolean safe(int[][] graph, int[] color, int x) {
+        if (color[x] > 0) {
+            return color[x] == 2;
+        }
+        color[x] = 1;
+        for (int y : graph[x]) {
+            if (!safe(graph, color, y)) {
+                return false;
+            }
+        }
+        color[x] = 2;
+        return true;
+    }
+
+    public static void main(String[] args) {
+        int[][] graph = {{1,2},{2,3},{5},{0},{5},{},{}};
+        eventualSafeNodes(graph);
+    }
+
+
 
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：38.7 MB, 在所有 Java 提交中击败了38.27%的用户
