@@ -574,6 +574,64 @@ public class LeetCode0to600 {
         }
     }
 
+    //动态规划
+    //执行用时：21 ms, 在所有 Java 提交中击败了61.57%的用户
+    //内存消耗：36.2 MB, 在所有 Java 提交中击败了82.06%的用户
+    //313. 超级丑数
+    //超级丑数 是一个正整数，并满足其所有质因数都出现在质数数组 primes 中。
+    //给你一个整数 n 和一个整数数组 primes ，返回第 n 个 超级丑数 。
+    //题目数据保证第 n 个 超级丑数 在 32-bit 带符号整数范围内。
+    public static int nthSuperUglyNumber(int n, int[] primes) {
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        int m = primes.length;
+        int[] pointers = new int[m];
+        int[] nums = new int[m];
+        Arrays.fill(pointers, 1);
+        for (int i = 2; i <= n; i++) {
+            nums[0] = dp[pointers[0]] * primes[0];
+            int minNum = nums[0];
+            for (int j = 1; j < m; j++) {
+                nums[j] = dp[pointers[j]] * primes[j];
+                minNum = Math.min(minNum, nums[j]);
+            }
+            dp[i] = minNum;
+            for (int j = 0; j < m; j++) {
+                if (minNum == nums[j]) {
+                    pointers[j]++;
+                }
+            }
+        }
+        return dp[n];
+    }
+
+    //优先队列
+    //执行用时：477 ms, 在所有 Java 提交中击败了19.98%的用户
+    //内存消耗：192.6 MB, 在所有 Java 提交中击败了5.11%的用户
+    //313. 超级丑数
+    //超级丑数 是一个正整数，并满足其所有质因数都出现在质数数组 primes 中。
+    //给你一个整数 n 和一个整数数组 primes ，返回第 n 个 超级丑数 。
+    //题目数据保证第 n 个 超级丑数 在 32-bit 带符号整数范围内。
+    public int nthSuperUglyNumber2(int n, int[] primes) {
+        Set<Long> set = new HashSet<>();
+        PriorityQueue<Long> q = new PriorityQueue<>();
+        q.add(1L);
+        set.add(1L);
+        while (n-- > 0) {
+            long x = q.poll();
+            if (n == 0) {
+                return (int)x;
+            }
+            for (int k : primes) {
+                if (!set.contains(k * x)) {
+                    set.add(k * x);
+                    q.add(k * x);
+                }
+            }
+        }
+        return -1; // never
+    }
+
     //自己写的 超时了
     //327. 区间和的个数
     //给你一个整数数组 nums 以及两个整数 lower 和 upper 。求数组中，值位于范围 [lower, upper] （包含 lower 和 upper）之内的 区间和的个数 。
@@ -694,6 +752,52 @@ public class LeetCode0to600 {
             }
         }
         return res;
+    }
+
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：35.8 MB, 在所有 Java 提交中击败了72.09%的用户
+    //457. 环形数组是否存在循环
+    //存在一个不含 0 的 环形 数组 nums ，每个 nums[i] 都表示位于下标 i 的角色应该向前或向后移动的下标个数：
+    //如果 nums[i] 是正数，向前 移动 nums[i] 步
+    //如果 nums[i] 是负数，向后 移动 nums[i] 步
+    //因为数组是 环形 的，所以可以假设从最后一个元素向前移动一步会到达第一个元素，而第一个元素向后移动一步会到达最后一个元素。
+    //数组中的 循环 由长度为 k 的下标序列 seq ：
+    //遵循上述移动规则将导致重复下标序列 seq[0] -> seq[1] -> ... -> seq[k - 1] -> seq[0] -> ...
+    //所有 nums[seq[j]] 应当不是 全正 就是 全负
+    //k > 1
+    //如果 nums 中存在循环，返回 true ；否则，返回 false 。
+    int OFFSET = 100010;
+    public boolean circularArrayLoop(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] >= OFFSET) {
+                continue;
+            }
+            int cur = i, tag = OFFSET + i, last;
+            boolean flag = nums[cur] > 0;
+            while (true) {
+                int next = ((cur + nums[cur]) % n + n ) % n;
+                last = nums[cur];
+                nums[cur] = tag;
+                cur = next;
+                if (cur == i) {
+                    break;
+                }
+                if (nums[cur] >= OFFSET) {
+                    break;
+                }
+                if (flag && nums[cur] < 0) {
+                    break;
+                }
+                if (!flag && nums[cur] > 0) {
+                    break;
+                }
+            }
+            if (last % n != 0 && nums[cur] == tag) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //执行用时：2 ms, 在所有 Java 提交中击败了98.34%的用户
@@ -931,7 +1035,4 @@ public class LeetCode0to600 {
         return right - left + 1;
     }
 
-    public static void main(String[] args) {
-        findUnsortedSubarray2(new int[]{2,1,5,4,3});
-    }
 }

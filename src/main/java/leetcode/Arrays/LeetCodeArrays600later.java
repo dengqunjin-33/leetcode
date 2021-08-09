@@ -126,6 +126,7 @@ public class LeetCodeArrays600later {
     public static List<Integer> eventualSafeNodes(int[][] graph) {
         int len = graph.length;
         List<Integer> res = new ArrayList<>();
+        //0-->初始话 1-->正在遍历 2-->循环体
         byte[] exclude = new byte[len];
         for (int i = 0; i < len; i++) {
             if ((0 == exclude[i]) && dfs(graph,exclude,i,0,len)){

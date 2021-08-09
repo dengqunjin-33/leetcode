@@ -346,6 +346,36 @@ public class MathLeetCode {
         return area1 + area2 - (zx2 - zx1) * (zy2 - zy1);
     }
 
+    //执行用时：2 ms, 在所有 Java 提交中击败了99.39%的用户
+    //内存消耗：37.3 MB, 在所有 Java 提交中击败了84.55%的用户
+    //264. 丑数 II
+    //给你一个整数 n ，请你找出并返回第 n 个 丑数 。
+    //丑数 就是只包含质因数 2、3 和/或 5 的正整数。
+    public int nthUglyNumber(int n) {
+        if (n == 1){
+            return 1;
+        }
+        int[] dp = new int[n];
+        dp[0] = 1;
+        int[] flag = new int[3];
+        for (int i = 1; i < n; i++) {
+            int min = dp[flag[0]] * 2;
+            min = Math.min(min,dp[flag[1]] * 3);
+            min = Math.min(min,dp[flag[2]] * 5);
+            dp[i] = min;
+            if (dp[flag[0]] * 2 == min){
+                ++flag[0];
+            }
+            if (dp[flag[1]] * 3 == min){
+                ++flag[1];
+            }if (dp[flag[2]] * 5 == min){
+                ++flag[2];
+            }
+
+        }
+        return dp[n - 1];
+    }
+
     //超时
     //319. 灯泡开关
     //初始时有 n 个灯泡处于关闭状态。
@@ -471,6 +501,30 @@ public class MathLeetCode {
             res.add(i % 2 == 0 ? temp * 2 - (label - temp + 1) : label);
         }
         Collections.reverse(res);
+        return res;
+    }
+
+
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：35.3 MB, 在所有 Java 提交中击败了24.57%的用户
+    //1137. 第 N 个泰波那契数
+    //泰波那契序列 Tn 定义如下：
+    //T0 = 0, T1 = 1, T2 = 1, 且在 n >= 0 的条件下 Tn+3 = Tn + Tn+1 + Tn+2
+    //给你整数 n，请返回第 n 个泰波那契数 Tn 的值。
+    public int tribonacci(int n) {
+        if (n == 0){
+            return 0;
+        }
+        int x0 = 0;
+        int x1 = 1;
+        int x2 = 1;
+        int res = x2;
+        for (int i = 3; i <= n; i++) {
+            res = x0 + x1 + x2;
+            x0 = x1;
+            x1 = x2;
+            x2 = res;
+        }
         return res;
     }
 
