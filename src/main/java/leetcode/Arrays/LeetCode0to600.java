@@ -754,6 +754,52 @@ public class LeetCode0to600 {
         return res;
     }
 
+    //执行用时：162 ms, 在所有 Java 提交中击败了45.83%的用户
+    //内存消耗：96.2 MB, 在所有 Java 提交中击败了11.46%的用户
+    //446. 等差数列划分 II - 子序列
+    //给你一个整数数组 nums ，返回 nums 中所有 等差子序列 的数目。
+    //如果一个序列中 至少有三个元素 ，并且任意两个相邻元素之差相同，则称该序列为等差序列。
+    //例如，[1, 3, 5, 7, 9]、[7, 7, 7, 7] 和 [3, -1, -5, -9] 都是等差序列。
+    //再例如，[1, 1, 2, 5, 7] 不是等差序列。
+    //数组中的子序列是从数组中删除一些元素（也可能不删除）得到的一个序列。
+    //例如，[2,5,10] 是 [1,2,1,2,4,1,5,10] 的一个子序列。
+    //题目数据保证答案是一个 32-bit 整数。
+    public static int numberOfArithmeticSlices(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+        if (n < 3){
+            return ans;
+        }
+        List<Map<Long,Integer>> list = new ArrayList<>();
+        for (int i = 0; i < n; ++i) {
+            list.add(new HashMap<>());
+        }
+        for (int i = 1; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                long diff = (long) nums[i] - nums[j];
+                if (diff <= Integer.MIN_VALUE || diff >= Integer.MAX_VALUE) {
+                    continue;
+                }
+
+                int cnt = list.get(j).getOrDefault(diff, 0);
+                ans += cnt;
+                list.get(i).put(diff, list.get(i).getOrDefault(diff, 0) + cnt + 1);
+            }
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        //1 0
+        //2 1
+        //3 3
+        //4 6
+        //5 10
+        //6
+        numberOfArithmeticSlices(new int[]{7,7,7,7,7});
+    }
+
+
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：35.8 MB, 在所有 Java 提交中击败了72.09%的用户
     //457. 环形数组是否存在循环
