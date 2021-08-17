@@ -1,5 +1,6 @@
 package leetcode.Strings;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class LeetCodeStrings {
@@ -555,6 +556,36 @@ public class LeetCodeStrings {
         return dp[0][n - 1];
     }
 
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：36.8 MB, 在所有 Java 提交中击败了7.40%的用户
+    //551. 学生出勤记录 I
+    //给你一个字符串 s 表示一个学生的出勤记录，其中的每个字符用来标记当天的出勤情况（缺勤、迟到、到场）。记录中只含下面三种字符：
+    //'A'：Absent，缺勤
+    //'L'：Late，迟到
+    //'P'：Present，到场
+    //如果学生能够 同时 满足下面两个条件，则可以获得出勤奖励：
+    //按 总出勤 计，学生缺勤（'A'）严格 少于两天。
+    //学生 不会 存在 连续 3 天或 3 天以上的迟到（'L'）记录。
+    //如果学生可以获得出勤奖励，返回 true ；否则，返回 false 。
+    public boolean checkRecord(String s) {
+        int aLen = 0;
+        int lLen = 0;
+        char[] chars = s.toCharArray();
+        for(char ch : chars){
+            if ('L' == ch){
+                if (++lLen == 3){
+                    return false;
+                }
+            }else {
+                if ('A' == ch && ++aLen == 2){
+                    return false;
+                }
+                lLen = 0;
+            }
+        }
+        return lLen < 3 || aLen < 2;
+    }
+
     //726. 原子的数量
     //给定一个化学式formula（作为字符串），返回每种原子的数量。
     //原子总是以一个大写字母开始，接着跟随0个或任意个小写字母，表示原子的名字。
@@ -806,5 +837,45 @@ public class LeetCodeStrings {
                 (time.charAt(1) - '0') * 60 +
                 (time.charAt(3) - '0') * 10 +
                 (time.charAt(4) - '0');
+    }
+
+    public static void main(String[] args) {
+        String start = "2014-03";
+        String end = "2015-06";
+        dateFormat(start,end);
+    }
+
+    public static List<String> dateFormat(String start, String end){
+        String hengGang = "-";
+        String[] split = start.split(hengGang);
+        //设置初始时间
+        //获取 2014.03.01.0.0.0
+        Calendar startCal = Calendar.getInstance();
+        startCal.set(Calendar.YEAR,Integer.parseInt(split[0]));
+        startCal.set(Calendar.MONTH,Integer.parseInt(split[1]) - 1);
+        startCal.set(Calendar.DAY_OF_MONTH,1);
+        startCal.set(Calendar.HOUR_OF_DAY,0);
+        startCal.set(Calendar.MINUTE,0);
+        startCal.set(Calendar.SECOND,0);
+        startCal.set(Calendar.MILLISECOND,0);
+
+        //获取2015.06.01，0.0.0
+        split = end.split(hengGang);
+        Calendar endCal = (Calendar) startCal.clone();
+        endCal.set(Calendar.YEAR,Integer.parseInt(split[0]));
+        endCal.set(Calendar.MONTH,Integer.parseInt(split[1]) - 1);
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+
+        List<String> res = new ArrayList<>();
+        Calendar cur = (Calendar) startCal.clone();
+        while (cur.getTime().compareTo(endCal.getTime()) <= 0 && cur.getTime().compareTo(startCal.getTime()) >= 0){
+            System.out.println(cur.getTime().toString());
+            String dayStr = sdf.format(cur.getTime());
+            res.add(dayStr);
+            cur.add(Calendar.MONTH, 1);
+        }
+        return res;
     }
 }
