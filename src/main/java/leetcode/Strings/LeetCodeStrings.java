@@ -423,6 +423,43 @@ public class LeetCodeStrings {
         return res;
     }
 
+    //执行用时：2 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：38.3 MB, 在所有 Java 提交中击败了78.24%的用户
+    //345. 反转字符串中的元音字母
+    //给你一个字符串 s ，仅反转字符串中的所有元音字母，并返回结果字符串。
+    //元音字母包括 'a'、'e'、'i'、'o'、'u'，且可能以大小写两种形式出现。
+    public String reverseVowels(String s) {
+        char[] chars = s.toCharArray();
+        int right = chars.length - 1;
+        for (int i = 0; i < right; i++) {
+            if (isVowels(chars[i])){
+                for (; right > i; right--) {
+                    if (isVowels(chars[right])){
+                        chars[i] ^= chars[right];
+                        chars[right] ^= chars[i];
+                        chars[i] ^= chars[right];
+                        right--;
+                        break;
+                    }
+                }
+            }
+        }
+        return new String(chars);
+    }
+
+    public boolean isVowels(char ch){
+        return ch == 'a' ||
+                ch == 'e' ||
+                ch == 'i' ||
+                ch == 'o' ||
+                ch == 'u' ||
+                ch == 'A' ||
+                ch == 'E' ||
+                ch == 'I' ||
+                ch == 'O' ||
+                ch == 'U';
+    }
+
     //402. 移掉K位数字
     //给定一个以字符串表示的非负整数 num，移除这个数中的 k 位数字，使得剩下的数字最小。
     //注意:
@@ -837,12 +874,6 @@ public class LeetCodeStrings {
                 (time.charAt(1) - '0') * 60 +
                 (time.charAt(3) - '0') * 10 +
                 (time.charAt(4) - '0');
-    }
-
-    public static void main(String[] args) {
-        String start = "2014-03";
-        String end = "2015-06";
-        dateFormat(start,end);
     }
 
     public static List<String> dateFormat(String start, String end){
