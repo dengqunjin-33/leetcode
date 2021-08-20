@@ -593,6 +593,35 @@ public class LeetCodeStrings {
         return dp[0][n - 1];
     }
 
+    //执行用时：2 ms, 在所有 Java 提交中击败了29.02%的用户
+    //内存消耗：38.6 MB, 在所有 Java 提交中击败了30.23%的用户
+    //541. 反转字符串 II
+    //给定一个字符串 s 和一个整数 k，从字符串开头算起，每 2k 个字符反转前 k 个字符。
+    //如果剩余字符少于 k 个，则将剩余字符全部反转。
+    //如果剩余字符小于 2k 但大于或等于 k 个，则反转前 k 个字符，其余字符保持原样。
+    public static String reverseStr(String s, int k) {
+        int len = s.length();
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < len; i += 2 * k) {
+            int left = i;
+            int right = left + (Math.min(len - i, k)) - 1;
+            while (left < right) {
+                chars[left] ^= chars[right];
+                chars[right] ^= chars[left];
+                chars[left] ^= chars[right];
+                left++;
+                right--;
+            }
+        }
+        return new String(chars);
+    }
+
+    public static void main(String[] args) {
+        //"abcdefg"
+        //2
+        reverseStr("abcdefg",2);
+    }
+
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：36.8 MB, 在所有 Java 提交中击败了7.40%的用户
     //551. 学生出勤记录 I
