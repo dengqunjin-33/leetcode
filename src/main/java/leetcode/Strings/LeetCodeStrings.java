@@ -616,12 +616,6 @@ public class LeetCodeStrings {
         return new String(chars);
     }
 
-    public static void main(String[] args) {
-        //"abcdefg"
-        //2
-        reverseStr("abcdefg",2);
-    }
-
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：36.8 MB, 在所有 Java 提交中击败了7.40%的用户
     //551. 学生出勤记录 I
