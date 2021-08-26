@@ -210,11 +210,6 @@ public class LeetCodeArrays600later {
         return true;
     }
 
-    public static void main(String[] args) {
-        int[][] graph = {{1,2},{2,3},{5},{0},{5},{},{}};
-        eventualSafeNodes(graph);
-    }
-
 
 
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
@@ -253,6 +248,30 @@ public class LeetCodeArrays600later {
                 rec1[1] >= rec2[3]);
     }
 
+    //执行用时：17 ms, 在所有 Java 提交中击败了64.29%的用户
+    //内存消耗：47.4 MB, 在所有 Java 提交中击败了38.59%的用户
+    //881. 救生艇
+    //第 i 个人的体重为 people[i]，每艘船可以承载的最大重量为 limit。
+    //每艘船最多可同时载两人，但条件是这些人的重量之和最多为 limit。
+    //返回载到每一个人所需的最小船数。(保证每个人都能被船载)。
+    public static int numRescueBoats(int[] people, int limit) {
+        int res = 0;
+        int left = 0;
+        int right = people.length - 1;
+        Arrays.sort(people);
+        while (left <= right){
+            ++res;
+            if (people[left] + people[right--] <= limit){
+                ++left;
+            }
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        numRescueBoats(new int[]{3,2,2,1},3);
+    }
+
     //912. 排序数组
     //给你一个整数数组 nums，请你将该数组升序排列。
     public int[] sortArray(int[] nums) {
@@ -260,7 +279,7 @@ public class LeetCodeArrays600later {
         return nums;
     }
 
-    private void quickNums(int[] nums,int start,int end){
+    private static void quickNums(int[] nums, int start, int end){
         if (start < end){
             int base = nums[start];
             int i = start;
