@@ -300,6 +300,19 @@ public class LeetCodeArrays600later {
         }
     }
 
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：38.5 MB, 在所有 Java 提交中击败了62.71%的用户
+    //1480. 一维数组的动态和
+    //给你一个数组 nums 。数组「动态和」的计算公式为：runningSum[i] = sum(nums[0]…nums[i]) 。
+    //请返回 nums 的动态和。
+    public int[] runningSum(int[] nums) {
+        int len = nums.length;
+        for(int i = 1;i < len;){
+            nums[i] += nums[i++-1];
+        }
+        return nums;
+    }
+
     //1292. 元素和小于等于阈值的正方形的最大边长
     //给你一个大小为 m x n 的矩阵 mat 和一个整数阈值 threshold。
     //请你返回元素总和小于或等于阈值的正方形区域的最大边长；如果没有这样的正方形区域，则返回 0 。
