@@ -461,6 +461,26 @@ public class LeetCodeArrays600later {
         return res[k - 1];
     }
 
+    //执行用时：2 ms, 在所有 Java 提交中击败了44.33%的用户
+    //内存消耗：36.1 MB, 在所有 Java 提交中击败了46.36%的用户
+    //1588. 所有奇数长度子数组的和
+    //给你一个正整数数组 arr ，请你计算所有可能的奇数长度子数组的和。
+    //子数组 定义为原数组中的一个连续子序列。
+    //请你返回 arr 中 所有奇数长度子数组的和 。
+    public int sumOddLengthSubarrays(int[] arr) {
+        int sum = 0;
+        int n = arr.length;
+        for (int start = 0; start < n; start++) {
+            for (int length = 1; start + length <= n; length += 2) {
+                int end = start + length - 1;
+                for (int i = start; i <= end; i++) {
+                    sum += arr[i];
+                }
+            }
+        }
+        return sum;
+    }
+
     //执行用时：5 ms, 在所有 Java 提交中击败了39.45%的用户
     //内存消耗：50.1 MB, 在所有 Java 提交中击败了88.07%的用户
     //1685. 有序数组中差绝对值之和
