@@ -268,10 +268,6 @@ public class LeetCodeArrays600later {
         return res;
     }
 
-    public static void main(String[] args) {
-        numRescueBoats(new int[]{3,2,2,1},3);
-    }
-
     //912. 排序数组
     //给你一个整数数组 nums，请你将该数组升序排列。
     public int[] sortArray(int[] nums) {
@@ -298,6 +294,51 @@ public class LeetCodeArrays600later {
             quickNums(nums, start, i);
             quickNums(nums, i + 1, end);
         }
+    }
+
+    //暴力
+    //执行用时：1121 ms, 在所有 Java 提交中击败了24.49%的用户
+    //内存消耗：53.7 MB, 在所有 Java 提交中击败了15.93%的用户
+    //1109. 航班预订统计
+    //这里有 n 个航班，它们分别从 1 到 n 进行编号。
+    //有一份航班预订表 bookings ，表中第 i 条预订记录 bookings[i] = [firsti, lasti, seatsi] 意味着在从 firsti 到 lasti （包含 firsti 和 lasti ）的 每个航班 上预订了 seatsi 个座位。
+    //请你返回一个长度为 n 的数组 answer，其中 answer[i] 是航班 i 上预订的座位总数。
+    public static int[] corpFlightBookings(int[][] bookings, int n) {
+        int[] res = new int[n];
+        for (int[] booking : bookings) {
+            int start = booking[0];
+            int end = booking[1];
+            for (; start <= end; start++) {
+                res[start - 1] += booking[2];
+            }
+        }
+        return res;
+    }
+
+    //大佬的拆分
+    //执行用时：2 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：53.8 MB, 在所有 Java 提交中击败了5.18%的用户
+    //1109. 航班预订统计
+    //这里有 n 个航班，它们分别从 1 到 n 进行编号。
+    //有一份航班预订表 bookings ，表中第 i 条预订记录 bookings[i] = [firsti, lasti, seatsi] 意味着在从 firsti 到 lasti （包含 firsti 和 lasti ）的 每个航班 上预订了 seatsi 个座位。
+    //请你返回一个长度为 n 的数组 answer，其中 answer[i] 是航班 i 上预订的座位总数。
+    public static int[] corpFlightBookings2(int[][] bookings, int n) {
+        int[] res = new int[n];
+        for(int [] booking : bookings){
+            res[--booking[0]] += booking[2];
+            if (booking[1] < n){
+                res[booking[1]] -= booking[2];
+            }
+        }
+        for (int i = 1; i < res.length; i++) {
+            res[i--] += res[i++];
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        int[][] x = {{1,2,10},{2,3,20},{2,5,25}};
+        corpFlightBookings2(x,5);
     }
 
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
