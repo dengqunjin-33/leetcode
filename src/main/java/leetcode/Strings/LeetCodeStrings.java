@@ -410,6 +410,39 @@ public class LeetCodeStrings {
         }
     }
 
+    //执行用时：1 ms, 在所有 Java 提交中击败了80.56%的用户
+    //内存消耗：36.5 MB, 在所有 Java 提交中击败了50.42%的用户
+    //165. 比较版本号
+    //给你两个版本号 version1 和 version2 ，请你比较它们。
+    //版本号由一个或多个修订号组成，各修订号由一个 '.' 连接。每个修订号由 多位数字 组成，可能包含 前导零 。每个版本号至少包含一个字符。修订号从左到右编号，下标从 0 开始，最左边的修订号下标为 0 ，下一个修订号下标为 1 ，以此类推。例如，2.5.33 和 0.1 都是有效的版本号。
+    //比较版本号时，请按从左到右的顺序依次比较它们的修订号。比较修订号时，只需比较 忽略任何前导零后的整数值 。也就是说，修订号 1 和修订号 001 相等 。如果版本号没有指定某个下标处的修订号，则该修订号视为 0 。例如，版本 1.0 小于版本 1.1 ，因为它们下标为 0 的修订号相同，而下标为 1 的修订号分别为 0 和 1 ，0 < 1 。
+    //返回规则如下：
+    //如果 version1 > version2 返回 1，
+    //如果 version1 < version2 返回 -1，
+    //除此之外返回 0。
+    public static int compareVersion(String version1, String version2) {
+        String[] split1 = version1.split("\\.");
+        String[] split2 = version2.split("\\.");
+        int len = Math.max(split1.length,split2.length);
+        int maxIndex1 = split1.length - 1;
+        int maxIndex2 = split2.length - 1;
+        for (int i = 0; i < len; i++) {
+            int x1 = maxIndex1 < i ? 0 : Integer.parseInt(split1[i]);
+            int x2 = maxIndex2 < i ? 0 : Integer.parseInt(split2[i]);
+            if (x1 > x2){
+                return 1;
+            }
+            if (x1 < x2){
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        compareVersion("7.5.2.4","7.5.3");
+    }
+
     //171. Excel表列序号
     //给定一个Excel表格中的列名称，返回其相应的列序号。
     public int titleToNumber(String columnTitle) {
