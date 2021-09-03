@@ -860,20 +860,6 @@ public class InterviewQuestionsAll {
         return res;
     }
 
-
-
-    //面试题 17.04. 消失的数字
-    //数组nums包含从0到n的所有整数，但其中缺了一个。请编写代码找出那个缺失的整数。你有办法在O(n)时间内完成吗？
-    //注意：本题相对书上原题稍作改动
-    public static int missingNumber(int[] nums) {
-        int len = nums.length;
-        int temp = (len * (len +1)) >> 1;
-        for (int i = 0; i < nums.length; i++) {
-            temp -= nums[i];
-        }
-        return temp;
-    }
-
     //面试题 17.01. 不用加号的加法
     //设计一个函数把两个数字相加。不得使用 + 或者其他算术运算符。
     public int add(int a, int b) {
@@ -887,6 +873,18 @@ public class InterviewQuestionsAll {
         }
         //退出while循环表示a,b之间不存在进位了，通过a^b求得结果
         return a^b;
+    }
+
+    //面试题 17.04. 消失的数字
+    //数组nums包含从0到n的所有整数，但其中缺了一个。请编写代码找出那个缺失的整数。你有办法在O(n)时间内完成吗？
+    //注意：本题相对书上原题稍作改动
+    public static int missingNumber(int[] nums) {
+        int len = nums.length;
+        int temp = (len * (len +1)) >> 1;
+        for (int i = 0; i < nums.length; i++) {
+            temp -= nums[i];
+        }
+        return temp;
     }
 
     //面试题 17.10. 主要元素
@@ -920,6 +918,14 @@ public class InterviewQuestionsAll {
             }
         }
         return -1;
+    }
+
+    //执行用时：7 ms, 在所有 Java 提交中击败了64.09%的用户内存消耗：48.2 MB, 在所有 Java 提交中击败了32.26%的用户
+    //面试题 17.14. 最小K个数
+    //设计一个算法，找出数组中最小的k个数。以任意顺序返回这k个数均可。
+    public int[] smallestK(int[] arr, int k) {
+        Arrays.sort(arr);
+        return Arrays.copyOf(arr, k);
     }
 
     public static class ListNode {
