@@ -705,10 +705,6 @@ public class InterviewQuestionsAll {
         return res;
     }
 
-    public static void main(String[] args) {
-        groupAnagrams(new String[]{"eat","tea","tan","ate","nat","bat"});
-    }
-
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：39.1 MB, 在所有 Java 提交中击败了59.74%的用户
     //面试题 10.03. 搜索旋转数组
@@ -881,8 +877,8 @@ public class InterviewQuestionsAll {
     public static int missingNumber(int[] nums) {
         int len = nums.length;
         int temp = (len * (len +1)) >> 1;
-        for (int i = 0; i < nums.length; i++) {
-            temp -= nums[i];
+        for (int num : nums) {
+            temp -= num;
         }
         return temp;
     }

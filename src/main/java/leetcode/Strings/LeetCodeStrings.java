@@ -805,6 +805,30 @@ public class LeetCodeStrings {
     }
 
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：36.1 MB, 在所有 Java 提交中击败了75.65%的用户
+    //1221. 分割平衡字符串
+    //在一个 平衡字符串 中，'L' 和 'R' 字符的数量是相同的。
+    //给你一个平衡字符串 s，请你将它分割成尽可能多的平衡字符串。
+    //注意：分割得到的每个字符串都必须是平衡字符串。
+    //返回可以通过分割得到的平衡字符串的 最大数量 。
+    public int balancedStringSplit(String s) {
+        char[] chars = s.toCharArray();
+        int count = 0;
+        int flag = 0;
+        for(char ch : chars){
+            if (ch == 'L'){
+                --flag;
+            }else {
+                ++flag;
+            }
+            if (0 == flag){
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：36.9 MB, 在所有 Java 提交中击败了17.45%的用户
     //1844. 将所有数字用字符替换
     //给你一个下标从 0 开始的字符串 s ，它的 偶数 下标处为小写英文字母，奇数 下标处为数字。
