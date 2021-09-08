@@ -122,6 +122,44 @@ public class LeetCodeGreedy {
         return sum;
     }
 
+    //502. IPO
+    //执行用时：90 ms, 在所有 Java 提交中击败了38.37%的用户
+    //内存消耗：59.2 MB, 在所有 Java 提交中击败了6.98%的用户
+    //假设 力扣（LeetCode）即将开始 IPO 。为了以更高的价格将股票卖给风险投资公司，力扣 希望在 IPO 之前开展一些项目以增加其资本。 由于资源有限，它只能在 IPO 之前完成最多 k 个不同的项目。帮助 力扣 设计完成最多 k 个不同项目后得到最大总资本的方式。
+    //给你 n 个项目。对于每个项目 i ，它都有一个纯利润 profits[i] ，和启动该项目需要的最小资本 capital[i] 。
+    //最初，你的资本为 w 。当你完成一个项目时，你将获得纯利润，且利润将被添加到你的总资本中。
+    //总而言之，从给定项目中选择 最多 k 个不同项目的列表，以 最大化最终资本 ，并输出最终可获得的最多资本。
+    //答案保证在 32 位有符号整数范围内。
+    public static int findMaximizedCapital(int k, int w, int[] profits, int[] capital) {
+        if (k == 0){
+            return w;
+        }
+        int n = profits.length;
+        int[][] projects = new int[n][2];
+        for(int i=0;i<n;i++){
+            projects[i][0] = capital[i];
+            projects[i][1] = profits[i];
+        }
+        Arrays.sort(projects, Comparator.comparingInt(a -> a[0]));
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((a,b)->b-a);
+
+        int i = 0;
+        while (k-- > 0) {
+            while (i < n && projects[i][0] <= w) {
+                priorityQueue.add(projects[i++][1]);
+            }
+            if (priorityQueue.isEmpty()) {
+                break;
+            }
+            w += priorityQueue.poll();
+        }
+        return w;
+    }
+
+    public static void main(String[] args) {
+        findMaximizedCapital(2,0,new int[]{1,2,3},new int[]{0,1,1});
+    }
+
     //执行用时：1 ms, 在所有 Java 提交中击败了53.14%的用户
     //内存消耗：35.2 MB, 在所有 Java 提交中击败了47.13%的用户
     //670. 最大交换
@@ -343,9 +381,5 @@ public class LeetCodeGreedy {
         }
         //返回结果
         return res;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(smallestRangeII(new int[]{1,3,6},3));
     }
 }
