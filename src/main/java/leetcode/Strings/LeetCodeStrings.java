@@ -439,10 +439,6 @@ public class LeetCodeStrings {
         return 0;
     }
 
-    public static void main(String[] args) {
-        compareVersion("7.5.2.4","7.5.3");
-    }
-
     //171. Excel表列序号
     //给定一个Excel表格中的列名称，返回其相应的列序号。
     public int titleToNumber(String columnTitle) {
