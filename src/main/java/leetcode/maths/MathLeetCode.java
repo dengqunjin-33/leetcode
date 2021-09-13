@@ -451,6 +451,37 @@ public class MathLeetCode {
         return (x * x == num);
     }
 
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：35.2 MB, 在所有 Java 提交中击败了47.82%的用户
+    //400. 第 N 位数字
+    //在无限的整数序列 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...中找到第 n 位数字。
+    //注意：n 是正数且在 32 位整数范围内（n < 231）。
+    public static int findNthDigit(int n) {
+        if (n < 10){
+            return n;
+        }
+        long base = 9;
+        long mi = 1;
+        long count = 1;
+        long temp = base * mi * count;
+        while (n > temp){
+            n -= temp;
+            mi *= 10;
+            count ++;
+            temp = base * mi * count;
+        }
+
+        long index = (n - 1) / count;
+        long target = mi + index;
+        long remain = n - index * count;
+        int res = 0;
+        for (int i = 0; i <= count - remain; i++) {
+            res = (int) (target % 10);
+            target /= 10;
+        }
+        return res;
+    }
+
     //552. 学生出勤记录 II
     //可以用字符串表示一个学生的出勤记录，其中的每个字符用来标记当天的出勤情况（缺勤、迟到、到场）。记录中只含下面三种字符：
     //'A'：Absent，缺勤
