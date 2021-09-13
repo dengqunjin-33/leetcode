@@ -227,6 +227,33 @@ public class LeetCode0to600 {
         return slow;
     }
 
+    //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：38.4 MB, 在所有 Java 提交中击败了87.33%的用户
+    //134. 加油站
+    //在一条环路上有 N 个加油站，其中第 i 个加油站有汽油 gas[i] 升。
+    //你有一辆油箱容量无限的的汽车，从第 i 个加油站开往第 i+1 个加油站需要消耗汽油 cost[i] 升。你从其中的一个加油站出发，开始时油箱为空。
+    //如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1。
+    //说明:
+    //如果题目有解，该答案即为唯一答案。
+    //输入数组均为非空数组，且长度相同。
+    //输入数组中的元素均为非负数。
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int len = gas.length;
+        int spare = 0;
+        int minSpare = Integer.MAX_VALUE;
+        int minIndex = 0;
+
+        for (int i = 0; i < len; i++) {
+            spare += gas[i] - cost[i];
+            if (spare >= 0 && spare < minSpare) {
+                minSpare = spare;
+                minIndex = i;
+            }
+        }
+
+        return spare < 0 ? -1 : (minIndex + 1) % len;
+    }
+
     //154. 寻找旋转排序数组中的最小值 II
     //已知一个长度为 n 的数组，预先按照升序排列，经由 1 到 n 次 旋转 后，得到输入数组。例如，原数组 nums = [0,1,4,4,5,6,7] 在变化后可能得到：
     //若旋转 4 次，则可以得到 [4,5,6,7,0,1,4]
@@ -808,6 +835,46 @@ public class LeetCode0to600 {
             }
         }
         return 2 * res;
+    }
+
+    //执行用时：6 ms, 在所有 Java 提交中击败了45.04%的用户
+    //内存消耗：47.3 MB, 在所有 Java 提交中击败了49.72%的用户
+    //448. 找到所有数组中消失的数字
+    //给你一个含 n 个整数的数组 nums ，其中 nums[i] 在区间 [1, n] 内。请你找出所有在 [1, n] 范围内但没有出现在 nums 中的数字，并以数组的形式返回结果。
+    public static List<Integer> findDisappearedNumbers(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            while (nums[i] != i + 1 && nums[nums[i] - 1] != nums[i]){
+                int temp = nums[nums[i] - 1];
+                nums[nums[i] - 1] = nums[i];
+                nums[i] = temp;
+            }
+        }
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1){
+                res.add(i + 1);
+            }
+        }
+        return res;
+    }
+
+    //执行用时：3 ms, 在所有 Java 提交中击败了100.00%的用户
+    //内存消耗：47.4 MB, 在所有 Java 提交中击败了36.06%的用户
+    //448. 找到所有数组中消失的数字
+    //给你一个含 n 个整数的数组 nums ，其中 nums[i] 在区间 [1, n] 内。请你找出所有在 [1, n] 范围内但没有出现在 nums 中的数字，并以数组的形式返回结果。
+    public static List<Integer> findDisappearedNumbers2(int[] nums) {
+        int n = nums.length;
+        for (int num : nums){
+            int temp = (num - 1) % n;
+            nums[temp] += n;
+        }
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] <= n){
+                res.add(i + 1);
+            }
+        }
+        return res;
     }
 
     //执行用时：151 ms, 在所有 Java 提交中击败了48.86%的用户
