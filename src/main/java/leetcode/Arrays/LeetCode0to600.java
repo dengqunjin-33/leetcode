@@ -789,16 +789,47 @@ public class LeetCode0to600 {
         return ans;
     }
 
-    public static void main(String[] args) {
-        //1 0
-        //2 1
-        //3 3
-        //4 6
-        //5 10
-        //6
-        numberOfArithmeticSlices(new int[]{7,7,7,7,7});
+    //执行用时：61 ms, 在所有 Java 提交中击败了97.22%的用户
+    //内存消耗：38.3 MB, 在所有 Java 提交中击败了57.21%的用户
+    //447. 回旋镖的数量
+    //给定平面上 n 对 互不相同 的点 points ，其中 points[i] = [xi, yi] 。回旋镖 是由点 (i, j, k) 表示的元组 ，其中 i 和 j 之间的距离和 i 和 k 之间的距离相等（需要考虑元组的顺序）。
+    //返回平面上所有回旋镖的数量。
+    public static int numberOfBoomerangs(int[][] points) {
+        Map<Integer,Integer> map = new HashMap<>();
+        int res = 0;
+        for (int[] ints : points) {
+            //注意这里 用map.clear代替new HashMap()性能直接提高一大堆
+            map.clear();
+            for (int[] point : points) {
+                int distance = (ints[0] - point[0]) * (ints[0] - point[0]) + (ints[1] - point[1]) * (ints[1] - point[1]);
+                Integer count = map.getOrDefault(distance,0);
+                res += count ++;
+                map.put(distance, count);
+            }
+        }
+        return 2 * res;
     }
 
+    //执行用时：151 ms, 在所有 Java 提交中击败了48.86%的用户
+    //内存消耗：38.3 MB, 在所有 Java 提交中击败了62.53%的用户
+    //447. 回旋镖的数量
+    //给定平面上 n 对 互不相同 的点 points ，其中 points[i] = [xi, yi] 。回旋镖 是由点 (i, j, k) 表示的元组 ，其中 i 和 j 之间的距离和 i 和 k 之间的距离相等（需要考虑元组的顺序）。
+    //返回平面上所有回旋镖的数量。
+    public static int numberOfBoomerangs2(int[][] points) {
+        Map<Integer,Integer> map;
+        int res = 0;
+        for (int[] ints : points) {
+            //注意这里
+            map= new HashMap<>();
+            for (int[] point : points) {
+                int distance = (ints[0] - point[0]) * (ints[0] - point[0]) + (ints[1] - point[1]) * (ints[1] - point[1]);
+                Integer count = map.getOrDefault(distance,0);
+                res += count ++;
+                map.put(distance, count);
+            }
+        }
+        return 2 * res;
+    }
 
     //执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
     //内存消耗：35.8 MB, 在所有 Java 提交中击败了72.09%的用户

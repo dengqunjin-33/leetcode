@@ -485,12 +485,6 @@ public class MathLeetCode {
         return (int) (LongStream.of(dp).sum() % MOD);
     }
 
-    public static void main(String[] args) {
-        for (int i = 9; i < 60; i++) {
-            System.out.println("i == " + i + ",res == " + checkRecord(i));
-        }
-    }
-
     //计数法  妙啊
     //869. 重新排序得到 2 的幂
     //给定正整数 N ，我们按任何顺序（包括原始顺序）将数字重新排序，注意其前导数字不能为零。
