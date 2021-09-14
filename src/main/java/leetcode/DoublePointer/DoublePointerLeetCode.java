@@ -3,6 +3,7 @@ package leetcode.DoublePointer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 public class DoublePointerLeetCode {
 
@@ -219,7 +220,40 @@ public class DoublePointerLeetCode {
         return res;
     }
 
+
+    //执行用时：22 ms, 在所有 Java 提交中击败了49.47%的用户
+    //内存消耗：38.7 MB, 在所有 Java 提交中击败了
+    //99.54%
+    //的用户
+    //524. 通过删除字母匹配到字典里最长单词
+    //给你一个字符串 s 和一个字符串数组 dictionary 作为字典，找出并返回字典中最长的字符串，该字符串可以通过删除 s 中的某些字符得到。
+    //如果答案不止一个，返回长度最长且字典序最小的字符串。如果答案不存在，则返回空字符串。
+    public static String findLongestWord(String s, List<String> dictionary) {
+        String res = "";
+        int dIndex;
+        int sIndex;
+        int sLen = s.length();
+        for (String dict : dictionary) {
+            dIndex = 0;
+            sIndex = 0;
+            int tLen = dict.length();
+            while (dIndex < tLen && sIndex < sLen) {
+                if (dict.charAt(dIndex) == s.charAt(sIndex)) {
+                    ++dIndex;
+                }
+                ++sIndex;
+            }
+            if (dIndex == tLen) {
+                if (tLen > res.length() || (tLen == res.length() && dict.compareTo(res) < 0)){
+                    res = dict;
+                }
+            }
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
-        compress(new char[]{'a','a','b','b','c','c','c'});
+        String[] strings = {"apple","ewaf","awefawfwaf","awef","awefe","ewafeffewafewf"};
+        findLongestWord("aewfafwafjlwajflwajflwafj", Arrays.asList(strings));
     }
 }
