@@ -415,6 +415,17 @@ public class MathLeetCode {
         return (int)Math.floor(Math.sqrt(n));
     }
 
+    //326. 3的幂
+    //执行用时：15 ms, 在所有 Java 提交中击败了93.08%的用户
+    //内存消耗：38.2 MB, 在所有 Java 提交中击败了52.35%的用户
+    //给定一个整数，写一个函数来判断它是否是 3 的幂次方。如果是，返回 true ；否则，返回 false 。
+    //整数 n 是 3 的幂次方需满足：存在整数 x 使得 n == 3x
+    public boolean isPowerOfThree(int n) {
+        while (n != 0 && n % 3 == 0) {
+            n /= 3;
+        }
+        return n == 1;
+    }
 
     //367. 有效的完全平方数
     //给定一个 正整数 num ，编写一个函数，如果 num 是一个完全平方数，则返回 true ，否则返回 false 。
